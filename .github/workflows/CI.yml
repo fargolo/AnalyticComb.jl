@@ -27,6 +27,9 @@ jobs:
         arch:
           - x64
     steps:
+      - run: |
+          python -m pip install --upgrade pip
+          pip install sympy
       - uses: actions/checkout@v3
       - uses: julia-actions/setup-julia@v1
         with:
@@ -60,10 +63,6 @@ jobs:
       - uses: julia-actions/julia-docdeploy@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-      - run: |
-          python -m pip install --upgrade pip
-          pip install sympy
       - run: |
           julia --project=docs -e '
             using Documenter: DocMeta, doctest
