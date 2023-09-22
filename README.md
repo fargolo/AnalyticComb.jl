@@ -1,6 +1,5 @@
-# AnalyticComb
+# AnalyticComb.jl
 
-[![Stable](https://img.shields.io/badge/docs-stable-blue.svg)](https://fargolo.github.io/AnalyticComb.jl/stable/)
 [![Dev](https://img.shields.io/badge/docs-dev-blue.svg)](https://fargolo.github.io/AnalyticComb.jl/dev/)
 [![Build Status](https://github.com/fargolo/AnalyticComb.jl/actions/workflows/CI.yml/badge.svg?branch=main)](https://github.com/fargolo/AnalyticComb.jl/actions/workflows/CI.yml?query=branch%3Amain)
 [![Coverage](https://codecov.io/gh/fargolo/AnalyticComb.jl/branch/main/graph/badge.svg)](https://codecov.io/gh/fargolo/AnalyticComb.jl)
@@ -8,12 +7,12 @@
 
 # Introduction  
 This package implements solutions for combinatorial problems using analytic combinatorics.
-Check the text book by Flafojelt & Sedgewick ( https://algo.inria.fr/flajolet/Publications/book.pdf ) and Coursera's full course by Robert Sedgewick ( https://www.coursera.org/learn/analytic-combinatorics ).  
+Check the text book by Flajojelt & Sedgewick ( https://algo.inria.fr/flajolet/Publications/book.pdf ) and Coursera's full course by Robert Sedgewick ( https://www.coursera.org/learn/analytic-combinatorics ).  
 
 In, 1751, Euler was studying the number of ways in which a given convex polygon could be decomposed into triangles by diagonal lines. (Flajolet & Sedgewick, p.20)
 
-He realized Regarding the progression of the numbers (1, 2, 5, 14, 42, 132,...) was directly related to the coefficients of the series expansion of the polynomial fraction (1−2a−√(1−4a)) / (2aa):
-1+2a +5a^2 + 14a^3 + 42a^4 + 132a^5 +...
+He realized that the progression of numbers in the solution (1, 2, 5, 14, 42, 132,...) was directly related to the coefficients of the series expansion of the polynomial fraction (1−2a−√(1−4a)) / (2aa), that is:
+1+2a +5a^2 + 14a^3 + 42a^4 + 132a^5 + ...
 
 Given any constructable combinatorial structure, one can use a set of operators to find a generating function and then analyze the problem analytically.
 
