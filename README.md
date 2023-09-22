@@ -14,7 +14,7 @@ In, 1751, Euler was studying the number of ways in which a given convex polygon 
 He realized that the progression of numbers in the solution (1, 2, 5, 14, 42, 132,...) was directly related to the coefficients of the series expansion of the polynomial fraction (1−2a−√(1−4a)) / (2aa), that is:
 1+2a +5a^2 + 14a^3 + 42a^4 + 132a^5 + ...
 
-Given any constructable combinatorial structure, one can use a set of operators to find a generating function and then analyze the problem analytically.
+Given any constructable combinatorial structure, one can use a set of operators to find a generating function and then approach the problem analytically.
 
 # Install
 
