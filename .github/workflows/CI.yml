@@ -72,5 +72,4 @@ jobs:
             using AnalyticComb
             DocMeta.setdocmeta!(AnalyticComb, :DocTestSetup, :(using AnalyticComb); recursive=true)
             doctest(AnalyticComb)'
-          |
 
