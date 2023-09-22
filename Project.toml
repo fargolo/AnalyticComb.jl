@@ -3,6 +3,9 @@ uuid = "8a73a7cf-268c-4a55-9a00-18d79986516d"
 authors = ["fargolo <felipe.c.argolo@protonmail.com> and contributors"]
 version = "1.0.0-DEV"
 
+[deps]
+SymPy = "24249f21-da20-56a4-8eb1-6a02cf4ae2e6"
+
 [compat]
 julia = "1"
 
