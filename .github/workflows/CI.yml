@@ -49,6 +49,9 @@ jobs:
       contents: write
       statuses: write
     steps:
+      - run: |
+          python -m pip install --upgrade pip
+          pip install sympy
       - uses: actions/checkout@v3
       - uses: julia-actions/setup-julia@v1
         with:
