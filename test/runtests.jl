@@ -3,7 +3,7 @@ using Test
 
 @testset "AnalyticComb.jl" begin
 
-    results = map(i->p_binary_word_runs(i,200),3:12) 
+    results = map(i->p_binary_words_runl(i,200),3:12) 
     
     # Check if any of the results presents error > 0.01
     @test sum(results - map(x-> round(x;digits=3),[6.549422864002916e-8,

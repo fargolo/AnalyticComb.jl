@@ -5,7 +5,7 @@ using SymPy
 #using DynamicalSystems
 
 export 
-	p_binary_word_runs
+	p_binary_words_runl
 
 include("binary_words.jl")
 #include("inference_plot.jl")

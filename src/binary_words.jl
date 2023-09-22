@@ -13,7 +13,7 @@ n_tot defaults to 200, according to the example in Flajolet & Sedgewick pag. 52
 """
 function W_coeff(r;n_tot=200)
 
-    @vars z r n
+    z = SymPy.symbols('z') 
     w_rr(r,z) = (1-z^(r+1))/(1-2z+z^(r+1)) # OGF
     #w_rr(r,z) = sum(z^x for x in 0:r)/(1 - sum(z^x for x in 1:r)) # Alternate form
 
@@ -22,6 +22,9 @@ function W_coeff(r;n_tot=200)
     
 end
 
+
+
+
 """
     p_binary_word_runs(k,n)
 
@@ -29,7 +32,7 @@ Returns probablity associatied with k-lenght run in a sequence of size n.
 
 Refer to the example in Flajolet & Sedgewick pag. 52.  
 """
-function p_binary_word_runs(k,n)
+function p_binary_words_runl(k,n)
     #a =  FastRational{Int128}(1/(2^n))
     #a = Rational{BigInt}(1/(2^n))
     a = 1//(BigInt(2)^n)
