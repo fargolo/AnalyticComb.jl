@@ -13,7 +13,7 @@ n_tot defaults to 200, according to the example in Flajolet & Sedgewick pag. 52
 """
 function W_coeff(r;n_tot=200)
 
-    z = SymPy.symbols('z') 
+    z = SymPy.symbols("z") 
     w_rr(r,z) = (1-z^(r+1))/(1-2z+z^(r+1)) # OGF
     #w_rr(r,z) = sum(z^x for x in 0:r)/(1 - sum(z^x for x in 1:r)) # Alternate form
 
