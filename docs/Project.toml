@@ -1,0 +1,3 @@
+[deps]
+AnalyticComb = "8a73a7cf-268c-4a55-9a00-18d79986516d"
+Documenter = "e30172f5-a6a5-5a46-863b-614d45cd2de4"
