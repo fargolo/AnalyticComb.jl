@@ -46,5 +46,3 @@ julia>p_binary_words_runl(6,200)
 
 
 
-
-
