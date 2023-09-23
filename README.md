@@ -41,8 +41,9 @@ julia>p_binary_words_runl(6,200)
 0.166...
 ```
 
-
-
-
-
+Stirling approximation for n!:
+```
+julia> stirling_factorial(7)
+4980.395831612462
+```
 
