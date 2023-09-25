@@ -24,6 +24,9 @@ series(triangulations_ogf(z)) # Also Catalan numbers
 #Stirling
 stirling_aprox(n) = (n/exp(1))^n*sqrt(2*pi*n)
 
+#p38
+stirling_catalan(n) = 4^n/(sqrt(pi*n^3))
+
 #41
 # Compositions
 compositions(n) = 2^(n-1)
