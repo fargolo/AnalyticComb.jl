@@ -38,11 +38,13 @@ primes_composition(n) = 0.30365 * 1.47622^n
 
 #change
 using SymPy
-change_counts(z) = 1/((1-z)(1 - z^5)(1 - z^10)(1 - z^25))
-series(change_counts(z),z,0,99)
-coefs = collect(series(change_counts(z),z,0,99),z)
-coefs.coeff(z,99)
-coefs.coeff(z^99)
-coefs.coeffs()
 @vars z
-p.coeffs()
+r = [1,5,10,25]
+restricted_sum_part(r)=prod([1/(1-z^i) for i in r])
+restricted_sum_part(r)
+change_counts(z) = 1/((1-z)*(1 - z^5)*(1 - z^10)*(1 - z^25))
+SEQ(z) = 1/(1-z)
+change_counts(z) = SEQ(z)*SEQ(z^5)*SEQ(z^10)*SEQ(z^25)
+coefs = collect(series(change_counts(z),z,0,100),z)
+coefs = collect(series(restricted_sum_part(r),z,0,100),z)
+coefs.coeff(z,99)

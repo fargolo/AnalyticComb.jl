@@ -5,18 +5,10 @@ Stirling approximation for n! as (n/exp(1))^n*sqrt(2*pi*n).
 """
 stirling_factorial(n) = (n/exp(1))^n*sqrt(2*pi*n)
 
-
 """
-    partitions(n)
+    stirling_catalan(n)
 
-Asymptotics for partition of integers by Hardy and Ramanujan, later improved by Rademache
+Stirling approximation for n_th Catalan number .
 """
-partitions(n) = (1/(4*n*sqrt(3)))*exp(pi*sqrt(2n/3))
+stirling_catalan(n) = 4^n/(sqrt(pi*n^3))
 
-
-"""
-    primes_composition(n)
-
-Asymptotics for composition of primes.
-"""
-primes_composition(n) = 0.30365 * 1.47622^n

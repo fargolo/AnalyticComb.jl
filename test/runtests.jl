@@ -17,5 +17,6 @@ using Test
     0.0440234813776148,
     0.022607888203734293]) .< 0.01) != 0
 
+    @test restricted_sum_part(99,[1,5,10,25]) == 213 # Polya problem for partition with restricted sum
 
 end

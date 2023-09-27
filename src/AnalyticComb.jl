@@ -1,14 +1,20 @@
 module AnalyticComb
 
-using SymPy
-#using TaylorSeries
-#using DynamicalSystems
+#using SymPy
+using Reexport
+
+@reexport using SymPy
 
 export
-	stirling_factorial, partitions, primes_composition,
+	SEQ,
+	stirling_factorial, stirling_catalan,
+	partitions, primes_composition, restricted_sum_part_gf, restricted_sum_part,
 	p_binary_words_runl
 
-include("binary_words.jl")
+include("operators.jl")
 include("asymptotics.jl")
+include("parts_comps.jl")
+include("binary_words.jl")
+
 
 end

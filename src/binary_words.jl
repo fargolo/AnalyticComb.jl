@@ -36,5 +36,3 @@ function p_binary_words_runl(k,n)
     return(Float64(result_sym))
 end
 
-
-
