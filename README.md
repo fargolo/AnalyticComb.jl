@@ -27,8 +27,7 @@ $pip install sympy
 
 Then, from Julia:  
 ```
-julia>]
-pkg>add https://github.com/fargolo/AnalyticComb.jl.git
+pkg>add AnalyticComb
 ```
 
 # Quick start  
@@ -49,7 +48,7 @@ julia> stirling_factorial(7)
 4980.395831612462
 ```
 
-Using SEQ operator to solve Polya denumerant problem (see Flajolet & Sedgewick,p. 43) about the number of ways of giving change of 99 cents using pennies (1 cent), nickels (5 cents), dimes (10 cents) and quarters (25 cents).  
+Using SEQ operator to solve Polya partitions with restricted summands (denumerants) problem (see Flajolet & Sedgewick,p. 43) about the number of ways of giving change of 99 cents using pennies (1 cent), nickels (5 cents), dimes (10 cents) and quarters (25 cents).  
 ```
 julia> restricted_sum_part_gf([1,5,10,25]) # generating function SEQ(z)*SEQ(z^5)*SEQ(z^10)*SEQ(z^25)
                  1                  
