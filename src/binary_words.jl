@@ -21,13 +21,14 @@ end
 
 
 """
-    p_binary_word_runs(k,n)
+    p_binary_words_doub_runl(k,n)
 
-Returns probablity associatied with k-lenght run in a sequence of size n. 
+Returns probablity associatied with k-lenght double runs (or either 0s or 1s) in a sequence of size n. 
 
+Specification is W ∼= SEQ(b) SEQ(a SEQ(a) b SEQ(b)) SEQ(a).
 Refer to the example in Flajolet & Sedgewick pag. 52.  
 """
-function p_binary_words_runl(k,n)
+function p_binary_words_doub_runl(k,n)
     #a =  FastRational{Int128}(1/(2^n))
     #a = Rational{BigInt}(1/(2^n))
     a = 1//(BigInt(2)^n)

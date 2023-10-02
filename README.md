@@ -34,11 +34,11 @@ pkg>add AnalyticComb
 
 SymPy.jl functionalities are reexported.  
 
-Probability for consecutive runs of lenght k in binary words of length n, use `p_binary_words_runl(k,n)`
+Probability for consecutive double runs (either 0s or 1s) of lenght k in binary words of length n, use `p_binary_words_doub_runl(k,n)`
 
 ```
 julia>using AnalyticComb
-julia>p_binary_words_runl(6,200)
+julia>p_binary_words_doub_runl(6,200) #e.g. 100000011010... or 01111110101...
 0.166...
 ```
 
