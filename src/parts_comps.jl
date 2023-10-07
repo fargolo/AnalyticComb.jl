@@ -1,7 +1,9 @@
 """
     I_gf(z)
 
-Integers as combinatorial structures ``I(z)= \\sum{n \\geq 1}_{} z^n = \\frac{z}{1-z}``
+Integers as combinatorial structures 
+
+``I(z)= \\sum_{n \\geq 1} z^n = \\frac{z}{1-z}``
 """
 function I_gf(z)
     z = SymPy.symbols("z")
@@ -11,11 +13,12 @@ end
 """
     partitions_gf(z,max)
 
-Generating function for partitions ``P(z)= \\prod{m = 1}_{\\Inf} \\frac{1}{1-z^m}``.
+Generating function for integer partitions.
+
+``P(z)= \\prod{m = 1}_{\\Inf} \\frac{1}{1-z^m}``
 Use `series` to obtain counts(EIS A000041): `series(partitions_gf(z,10),z,0,8)` for n up to 8.
 """
 function partitions_gf(z,max)
-    z = SymPy.symbols("z")
     n = SymPy.symbols("n")
     prod([1/(1-z^n) for n in 1:max])
 end
@@ -54,7 +57,8 @@ end
 
 Number of compositions of n with components in the set {1,2,..,r}. 
 
-r = 2 yields Fibonnaci numbers (EIS A000045) and r>2 yields generalized Fibonacci numbers.
+r = 2 yields Fibonnaci numbers (EIS A000045): ``F_{n} = F_{n-1} + F_{n-2}``.
+r>2 yields generalized Fibonacci numbers.
 """
 function restricted_sum_comp(n,r)
     z = SymPy.symbols("z")
