@@ -1,17 +1,42 @@
 """
-    partitions(n)
+    I_gf(z)
+
+Integers as combinatorial structures ``I(z)= \\sum{n \\geq 1}_{} z^n = \\frac{z}{1-z}``
+"""
+function I_gf(z)
+    z = SymPy.symbols("z")
+    return(z*SEQ(z))
+end
+
+"""
+    partitions_gf(z,max)
+
+Generating function for partitions ``P(z)= \\prod{m = 1}_{\\Inf} \\frac{1}{1-z^m}``.
+For instance, use `series(partitions_gf(z,10),z,0,8)` to obtain counts for n up to 8 (EIS A000041)
+"""
+function partitions_gf(z,max)
+    z = SymPy.symbols("z")
+    n = SymPy.symbols("n")
+    prod([1/(1-z^n) for n in 1:max])
+end
+#MSET(I_gf(z)) yields the correct gen. function, as in page 41 (equation 38), 
+# but series(MSET(I_gf(z))) returns coefficients in 2^n
+
+
+"""
+    partitions_asym(n)
 
 Asymptotics for partition of integers by Hardy and Ramanujan, later improved by Rademache
 """
-partitions(n) = (1/(4*n*sqrt(3)))*exp(pi*sqrt(2n/3))
+partitions_asym(n) = (1/(4*n*sqrt(3)))*exp(pi*sqrt(2n/3))
 
 
 """
-    primes_composition(n)
+    primes_composition_asym(n)
 
 Asymptotics for composition of primes.
 """
-primes_composition(n) = 0.30365 * 1.47622^n
+primes_composition_asym(n) = 0.30365 * 1.47622^n
 
 """
     restricted_sum_comp_gf(r)

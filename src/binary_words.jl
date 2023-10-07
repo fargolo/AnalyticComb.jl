@@ -18,8 +18,6 @@ function W_coeff(r;n_tot=200)
 end
 
 
-
-
 """
     p_binary_words_doub_runl(k,n)
 
