@@ -18,7 +18,7 @@ Given any constructable combinatorial structure, one can use a set of operators 
 
 # Install
 
-Python package sympy is required. There's a Julia native implementation in /dev, but currently not working (see  https://discourse.julialang.org/t/trying-julia-for-analytic-combinatorics/103682 ).  
+Python package sympy is required. 
 
 ```
 $python -m pip install --upgrade pip

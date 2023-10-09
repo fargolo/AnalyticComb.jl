@@ -1,7 +1,7 @@
 """
     SEQ(z)
 
-Sequence operator (Pólya quasi-inverse operator). 
+Sequence operator (Pólya quasi-inverse operator).   
 
 Defined as ``A = SEQ(B) \\implies A(z) = \\frac{1}{1 - B(z)}``.
 """
@@ -11,7 +11,7 @@ SEQ(z) = 1/(1-z)
 """
     MSET(z)
 
-Multiset operator (Pólya exponential operator). 
+Multiset operator (Pólya exponential operator).  
 
 Defined as ``A = MSET(B) \\implies A(z) = \\frac{1}{1 - B(z)}``.
 """

@@ -12,7 +12,7 @@ stirling_factorial_asym(n) = (n/exp(1))^n*sqrt(2*pi*n)
 
 Stirling approximation for n_th Catalan number. (EIS A000108)
 
-``\\frac{4^n}{\\sqrt{\\pi n^3}}``
+``C_{n} \\sim \\frac{4^n}{\\sqrt{\\pi n^3}}``
 """
 stirling_catalan_asym(n) = 4^n/(sqrt(pi*n^3))
 

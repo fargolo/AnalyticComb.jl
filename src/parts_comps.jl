@@ -15,7 +15,7 @@ end
 
 Generating function for integer partitions.
 
-``P(z)= \\prod{m = 1}_{\\Inf} \\frac{1}{1-z^m}``
+``P(z)= \\prod{m = 1}_{\\Inf} \\frac{1}{1-z^m}``  
 Use `series` to obtain counts(EIS A000041): `series(partitions_gf(z,10),z,0,8)` for n up to 8.
 """
 function partitions_gf(z,max)
@@ -37,7 +37,9 @@ partitions_asym(n) = (1/(4*n*sqrt(3)))*exp(pi*sqrt(2n/3))
 """
     primes_composition_asym(n)
 
-Asymptotics for composition of n into prime parts (A023360).
+Asymptotics for composition of n into prime parts (EIS A023360).
+
+``B_{n} \\sim 0.30365 * 1.47622^n``
 """
 primes_composition_asym(n) = 0.30365 * 1.47622^n
 
@@ -57,7 +59,7 @@ end
 
 Number of compositions of n with components in the set {1,2,..,r}. 
 
-r = 2 yields Fibonnaci numbers (EIS A000045): ``F_{n} = F_{n-1} + F_{n-2}``.
+r = 2 yields Fibonnaci numbers (EIS A000045): ``F_{n} = F_{n-1} + F_{n-2}``.  
 r>2 yields generalized Fibonacci numbers.
 """
 function restricted_sum_comp(n,r)
