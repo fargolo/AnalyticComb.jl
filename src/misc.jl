@@ -1,7 +1,7 @@
 """
     stirling_factorial_asym(n)
 
-Stirling approximation for n! as (n/exp(1))^n*sqrt(2*pi*n). (EIS A000142)
+Stirling approximation for n! (EIS A000142)
 
 ``n! \\sim \\sqrt{2 \\pi n} {\\frac{n}{e}}^{n}``
 """
