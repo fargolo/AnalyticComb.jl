@@ -15,7 +15,7 @@ end
 
 Generating function for integer partitions.
 
-Defined as ``P(z) = \\prod{m = 1}_{\\Inf} \\frac{1}{1-z^m}``  
+Defined as ``P(z) = \\prod{m = 1}_{\\infty} \\frac{1}{1-z^m}``  
 Use `series` to obtain counts(EIS A000041): `series(partitions_gf(z,10),z,0,8)` for n up to 8.
 """
 function partitions_gf(z,max)

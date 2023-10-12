@@ -6,7 +6,7 @@ using Reexport
 @reexport using SymPy
 
 export
-	SEQ, MSET,
+	SEQ, MSET, PSET, CYC, 
 	stirling_factorial_asym, stirling_catalan_asym,
 	I_gf, partitions_gf, partitions_asym, primes_composition_asym, 
 	restricted_sum_comp_gf, restricted_sum_comp, restricted_sum_part_gf, restricted_sum_part,
