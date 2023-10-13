@@ -1,7 +1,7 @@
 name = "AnalyticComb"
 uuid = "8a73a7cf-268c-4a55-9a00-18d79986516d"
 authors = ["fargolo <felipe.c.argolo@protonmail.com> and contributors"]
-version = "1.0.3"
+version = "1.0.4"
 
 [deps]
 Reexport = "189a3867-3050-52da-a836-e630ba90ab69"

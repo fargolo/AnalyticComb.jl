@@ -2,6 +2,10 @@
 CurrentModule = AnalyticComb
 ```
 
+# Index
+
+List of functions.  
+
 ```@index
 ```
 

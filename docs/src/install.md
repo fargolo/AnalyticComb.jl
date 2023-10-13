@@ -10,5 +10,13 @@ $pip install sympy
 
 Then, from Julia:  
 ```
+julia> # type the right bracket to enter pkg REPL ']'
 pkg>add AnalyticComb
 ```
+
+Or
+
+```
+julia>using Pkg; Pkg.add("AnalyticComb")
+```
+
