@@ -6,9 +6,14 @@ CurrentModule = AnalyticComb
 
 Documentation for [AnalyticComb](https://github.com/fargolo/AnalyticComb.jl).
 
-# Introduction  
+# References   
+
 This package implements solutions for combinatorial problems using analytic combinatorics.
 Check the text book by Flajojelt & Sedgewick ( https://algo.inria.fr/flajolet/Publications/book.pdf ) and Coursera's full course by Robert Sedgewick ( https://www.coursera.org/learn/analytic-combinatorics ).  
+
+I thank Ricardo Bittencourt ( https://github.com/ricbit/ ) for his introductory texts on the subject and for helping in an initial implementation.  
+
+# Background  
 
 In, 1751, Euler was studying the number of ways in which a given convex polygon could be decomposed into triangles by diagonal lines. (Flajolet & Sedgewick, p.20)
 
@@ -17,48 +22,13 @@ He realized that the progression of numbers in the solution (1, 2, 5, 14, 42, 13
 
 Given any constructable combinatorial structure, one can use a set of operators to find a generating function and then approach the problem analytically.
 
-# Install
+# Introduction  
 
-Python package sympy is required. 
+For newcomers, this an analytic approach to combinatorial problems. Modelling this type of problem often relies on intuitive arguments. Analytic combinatorics describe such situations with a grammar of operators: Sum, Cartesian product, Sequence, Multiset, Powerset and Cycle. Such operators yield an algebraic expression (e.g. ``P(z)``), called the generating function, which is directly related to the problem via complex analysis. We are generally interested in the coefficients of its series expansion. That is, let the series expansion of ``P(z)`` be ``T(P(z)) = \\sum_{n=1}^{\\infty} a_n x^n``. Then, the values of ``a^n`` correspond to the counts of objects of size ``n`` in this combinatorial class.
 
-```
-$python -m pip install --upgrade pip
-$pip install sympy
-```
+For instance, the number of binary words (e.g. abababbabab...) of size n is given by ``W_n = 2^n``. Using the sequence operator (``SEQ(A) \\implies A(z) = \\frac{1}/{1-z}``) , we find the generating function: ``W = SEQ(Z+Z) \\implies W(z) = \\frac{1}{1 - 2z}``. ``T(W(z)) = 1 + 2z + 4z^2 + 8z^3 + ...``.  
 
-Then, from Julia:  
-```
-pkg>add AnalyticComb
-```
+This approach can be used to solve complex problems in a systematic way.    
 
-# Quick start  
-
-SymPy.jl functionalities are reexported.  
-
-Probability for consecutive double runs (either 0s or 1s) of lenght k in binary words of length n, use `p_binary_words_doub_runl(k,n)`
-
-```
-julia>using AnalyticComb
-julia>p_binary_words_doub_runl(6,200) #e.g. 100000011010... or 01111110101...
-0.166...
-```
-
-Stirling approximation for n!:
-```
-julia> stirling_factorial(7)
-4980.395831612462
-```
-
-Using SEQ operator to solve Polya partitions with restricted summands (denumerants) problem (see Flajolet & Sedgewick,p. 43) about the number of ways of giving change of 99 cents using pennies (1 cent), nickels (5 cents), dimes (10 cents) and quarters (25 cents).  
-```
-julia> restricted_sum_part_gf([1,5,10,25]) # generating function SEQ(z)*SEQ(z^5)*SEQ(z^10)*SEQ(z^25)
-                 1                  
-────────────────────────────────────
-        ⎛     5⎞ ⎛     10⎞ ⎛     25⎞
-(1 - z)⋅⎝1 - z ⎠⋅⎝1 - z  ⎠⋅⎝1 - z  ⎠
-
-julia>restricted_sum_part(99,[1,5,10,25]) 
-213
-```
 
 
