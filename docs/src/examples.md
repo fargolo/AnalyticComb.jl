@@ -10,12 +10,12 @@ julia>p_binary_words_doub_runl(6,200) #e.g. 100000011010... or 01111110101...
 
 # Restricted summands problem
 
-Solving Polya partitions with restricted summands (denumerants) problem (Flajolet & Sedgewick, p.43). 
+Solving Polya partitions with restricted summands (denumerants) problem[^1]. 
 What is the number of ways of giving change of 99 cents using pennies (1 cent), nickels (5 cents), dimes (10 cents) and quarters (25 cents)?
 
 That is, the number of ways to obtain 99 by summing 1s,5s,10s and 25s.   
 
-``99 = k_1 1 + k_2 5 + k_3 10 + k_4 25 , k \in \mathbb{N}``.  
+``99 = k_1 1 + k_2 5 + k_3 10 + k_4 25 , \quad k \in \mathbb{N}``.  
 
 The generating function is:``P(z) = SEQ(z)*SEQ(z^5)*SEQ(z^{10})*SEQ(z^{25})`` and the solution is the
 cofficient of ``z^{99}`` in the expansion: ``[z^{99}] T(P(z))``.  
@@ -36,3 +36,4 @@ julia>restricted_sum_part(99,[1,5,10,25]) # Counts for 99 as a sum of elements i
 ```
 
 
+[^1]: Flajolet, P., & Sedgewick, R. (2009). Analytic combinatorics. Cambridge University press. Page 43

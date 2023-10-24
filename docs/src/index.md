@@ -15,7 +15,7 @@ I thank Ricardo Bittencourt ( https://github.com/ricbit/ ) for his introductory 
 
 # Background  
 
-In 1751, Euler was studying the number of ways in which a given convex polygon could be decomposed into triangles by diagonal lines. (Flajolet & Sedgewick, p.20)
+In 1751, Euler was studying the number of ways in which a given convex polygon could be decomposed into triangles by diagonal lines.[^1]
 
 He realized that the progression of numbers in the solution (1, 2, 5, 14, 42, 132,...) was directly related to the coefficients of the series expansion of the polynomial fraction 
 ``\frac{1−2a−\sqrt{1−4a}}{2aa}``, that is:
@@ -25,7 +25,7 @@ Given any constructable combinatorial structure, one can use a set of operators 
 
 # Introduction  
 
-For newcomers, this an analytic approach to combinatorial problems. Modelling this type of problem often relies on intuitive arguments. Analytic combinatorics describe such situations with a grammar of operators: Sum, Cartesian product, Sequence, Multiset, Powerset and Cycle. Such operators yield an algebraic expression (e.g. ``P(z)``), called the generating function, which is directly related to the problem via complex analysis. We are generally interested in the coefficients of its series expansion. That is, let the series expansion of ``P(z)`` be ``T(P(z)) = \sum_{n=1}^{\infty} a_n x^n``. Then, the values of ``a^n`` correspond to the counts of objects of size ``n`` in this combinatorial class.
+For newcomers, this an analytic approach to combinatorial problems. Modelling this type of problem often relies on intuitive arguments. The symbolic method describe such situations with a grammar of operators: Sum, Cartesian product, Sequence, Multiset, Powerset and Cycle. Such operators yield an algebraic expression (e.g. ``P(z)``), called the generating function, which is directly related to the problem via complex analysis. We are generally interested in the coefficients of its series expansion. That is, let the series expansion of ``P(z)`` be ``T(P(z)) = \sum_{n=1}^{\infty} a_n x^n``. Then, the values of ``a^n`` correspond to the counts of objects of size ``n`` in this combinatorial class.
 
 For instance, the number of binary words (e.g. abababbabab...) of size n is given by ``W_n = 2^n``. Using the sequence operator (``SEQ(A) \implies A(z) = \frac{1}{1-z}``) , we find the generating function: 
 
@@ -34,3 +34,4 @@ For instance, the number of binary words (e.g. abababbabab...) of size n is give
 This approach can be used to solve complex problems in a systematic way.    
 
 
+[^1]: Flajolet, P., & Sedgewick, R. (2009). Analytic combinatorics. Cambridge University press. Page 20
