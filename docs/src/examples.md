@@ -15,7 +15,9 @@ What is the number of ways of giving change of 99 cents using pennies (1 cent), 
 
 That is, the number of ways to obtain 99 by summing 1s,5s,10s and 25s.   
 
-``99 = k_1 1 + k_2 5 + k_3 10 + k_4 25 , \quad k \in \mathbb{N}``.  
+Or number of distinct sets ``S = \{k_1,k_2,_k_3,k_4}\, \quad k \in \mathbb{N}`` satisfying the equation :  
+
+`` 1 k_1  + 5 k_2  + 10 k_3  + 25 k_4  = 99``.  
 
 The generating function is:``P(z) = SEQ(z)*SEQ(z^5)*SEQ(z^{10})*SEQ(z^{25})`` and the solution is the
 cofficient of ``z^{99}`` in the expansion: ``[z^{99}] T(P(z))``.  

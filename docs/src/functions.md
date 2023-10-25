@@ -30,7 +30,7 @@ Pages   = ["parts_comps.jl"]
 
 # Miscellaneous
 
-Miscellaneous functins. Currently, Stirling approximation for factorial (``n!``) and Catalan numbers.  
+Miscellaneous functins.    
 
 ```@autodocs
 Modules = [AnalyticComb]

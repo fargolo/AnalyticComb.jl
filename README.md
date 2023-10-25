@@ -38,7 +38,7 @@ pkg>add AnalyticComb
 
 ## Example
 
-This software can be used to solve problems such as Polya's problem of partitions with restricted summands ([^2]). What is the number of ways of giving change of 99 cents using pennies (1 cent), nickels (5 cents), dimes (10 cents) and quarters (25 cents)?
+This software can be used to solve problems such as Polya's problem of partitions with restricted summands [^2]. What is the number of ways of giving change of 99 cents using pennies (1 cent), nickels (5 cents), dimes (10 cents) and quarters (25 cents)?
 
 ```
 julia> using AnalyticComb

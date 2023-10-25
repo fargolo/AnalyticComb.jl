@@ -91,3 +91,42 @@ function restricted_sum_part(n,r)
     coefs = collect(series(restricted_sum_part_gf(r),z,0,n+1),z)
     return(coefs.coeff(z,n))
 end
+
+"""
+    partitions_max_r(n,r)
+
+Number of partitions of size n whose summands lie in the set {1, 2, ... , r} 
+
+n must be an integer and r is the maximum value in the set of summands.
+"""
+partitions_max_r(n,r) = n^(r-1)*(1 / (factorial(r)*factorial(r-1)))
+
+
+"""
+    partitions_asym(n,tau)
+
+Asymptotics for partitions of size n whose summands lie in the arbitrary finite set ``\\tau`` (tau). 
+
+tau must be an array of integers.
+``{P_n}^{T} \\sim \\frac{1}{\\tau} \\frac{n^{r-1}}{(r-1)!}``
+"""
+partitions_asym(n,tau) = (1/prod(tau))* ((n^(length(tau)-1))/(length(tau) -1))
+
+"""
+    fixed_size_comps(n,k)
+
+Compositions of size n made of k summands,
+
+``{C_n}^{k} = {n-1 \\choose k -1}``
+"""
+fixed_size_comps(n,k) = binomial(n-1,k-1)
+
+
+"""
+    fixed_size_comps_asym(n,k)
+
+Asymptotics for compositions of size n made of k summands,
+
+``{C_n}^{k} \\sim \\frac{n^{k-1}}{(k-1)!}``
+"""
+fixed_size_comps_asym(n,k) = n^(k-1)/factorial(k-1)
