@@ -20,7 +20,7 @@ export
 	#words and regular languages
 	words_without_k_run, longest_run_binary_asym, 
 	bin_words_with_k_occurences, bin_words_with_k_occurences_constr,
-	p_binary_words_doub_runl,
+	p_binary_words_doub_runl
 
 include("operators.jl")
 include("misc.jl")
