@@ -17,13 +17,15 @@ export
 	restricted_sum_comp_gf, restricted_sum_comp, restricted_sum_part_gf, restricted_sum_part,
 	partitions_max_r, partitions_asym, fixed_size_comps, fixed_size_comps_asym,
 
-	#binary words
-	p_binary_words_doub_runl
+	#words and regular languages
+	words_without_k_run, longest_run_binary_asym, 
+	bin_words_with_k_occurences, bin_words_with_k_occurences_constr,
+	p_binary_words_doub_runl,
 
 include("operators.jl")
 include("misc.jl")
 include("parts_comps.jl")
-include("binary_words.jl")
+include("words_languages.jl")
 
 
 end

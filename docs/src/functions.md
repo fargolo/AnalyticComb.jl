@@ -37,11 +37,11 @@ Modules = [AnalyticComb]
 Pages   = ["misc.jl"]
 ```
 
-# Binary words
+# Words and regular languages  
 
-Binary words counts.  
+Words counts, such as number of words with consecutive runs.    
 
 ```@autodocs
 Modules = [AnalyticComb]
-Pages   = ["binary_words.jl"]
+Pages   = ["words_languages.jl"]
 ```

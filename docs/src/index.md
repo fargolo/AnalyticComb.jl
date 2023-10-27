@@ -11,7 +11,7 @@ Documentation for [AnalyticComb](https://github.com/fargolo/AnalyticComb.jl).
 This package implements solutions for combinatorial problems using analytic combinatorics.
 Check the text book by Flajojelt & Sedgewick ( https://algo.inria.fr/flajolet/Publications/book.pdf ) and Coursera's full course by Robert Sedgewick ( https://www.coursera.org/learn/analytic-combinatorics ).  
 
-I thank Ricardo Bittencourt ( https://github.com/ricbit/ ) for his introductory texts on the subject and for helping in an initial implementation.  
+Kudos to Ricardo Bittencourt ( https://github.com/ricbit/ ) for his introductory texts on the subject and for helping in an initial implementation.  
 
 # Background  
 
