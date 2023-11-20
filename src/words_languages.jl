@@ -9,7 +9,7 @@ For instance, if n=4 and k=3, these words are not counted: aaab, baaa, aaaa.
 """
 function words_without_k_run(k,n;m=2)
     z = SymPy.symbols("z") 
-    word_run_ogf = (1-z^k)/(1 - m*z + z^(k+1))
+    word_run_ogf = (1-z^k)/(1 - m*z + (m-1)*z^(k+1))
     coefs = collect(series(word_run_ogf,z,0,n+1),z)
     coefs.coeff(z,n)
 end
@@ -47,16 +47,25 @@ end
 
 The set L of binary words that contain exactly k occurrences of the letter b, constrained by the maximum distance d among occurrences
 
-``L^{[d]} = SEQ(a){(b SEQ_{<d}(a))}^{k-1}(b SEQ(a))  \\implies  L(z) = \\frac{z^k {(1-z^d)}^{k-1}}{{(1-z)}^{k+1}}``
+``L^{[d]} = SEQ(a){(b SEQ_{<d}(a))}^{k-1}(b SEQ(a))``.  
 
-For instance, among binary words with 10 letters, there are 154 words with 4 ``b``s in which the maximum distance between ``b``s is 2 (e.g.aaabababab)
-(``[z^{10}]L^{[2]}(z) = 154``).
+For instance, among binary words with 10 letters, there are 45 words with 4 ``b``s in which the maximum distance between ``b``s is 2 (e.g.aaabababab)
+(``[z^{10}]L^{[2]}(z) = 45``).
 """
 function bin_words_with_k_occurences_constr(k,n,d)
-    z = SymPy.symbols("z") 
-    word_ogf = ((z^k)(1-z^d)^(k-1))/((1-z)^(k+1))
-    coefs = collect(series(word_ogf,z,0,n+1),z)
-    coefs.coeff(z,n)
+    # Binomial convolution. See page 52 in Flaj  & Sedg.
+    accum = []
+    for j in 0:Int(round(n/d))
+        if(j>=k-1  || j*d >=n)
+            break
+        end
+        #print("\nj is ",j)
+        acc = (-1)^j * binomial(k-1,j) * binomial(n-d*j,k)
+        #print("\naccum is ",acc)
+        push!(accum,acc)
+    end
+    #print("\nSum is ")
+    sum(accum)
 end
 
 
