@@ -19,8 +19,24 @@ using Test
         
     end
     
-    # Polya problem for partition with restricted sums (partitions) for 99. 
-    @test restricted_sum_part(99,[1,5,10,25]) == 213 
+    @testset "PartComps" begin
+        
+        @test restricted_sum_part(99,[1,5,10,25]) == 213 
+
+        integers = collect(series(I_gf(1),z,0,10),z) 
+        @test integers.coeff(z,3) == 1
+
+        A000041 = [1, 2, 3, 5, 7, 11, 15, 22, 30, 42]
+        part_asym_diffs = (map(x -> partitions_asym(x),collect(1:10)) - A000041) ./ A000041 
+        @test !(0 in (part_asym_diffs .< 1))
+
+        @test fixed_size_comps(10,3) == 36
+        @test fixed_size_comps(10,3) == 50
+
+
+    end
+    
+
 
 
 end
