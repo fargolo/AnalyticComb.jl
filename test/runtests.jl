@@ -20,8 +20,11 @@ using Test
     end
     
     @testset "PartComps" begin
+
         
         @test restricted_sum_part(99,[1,5,10,25]) == 213 
+
+        z = SymPy.symbols("z")
 
         integers = collect(series(I_gf(1),z,0,10),z) 
         @test integers.coeff(z,3) == 1
