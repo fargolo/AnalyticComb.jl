@@ -34,7 +34,7 @@ using Test
         @test !(0 in (part_asym_diffs .< 1))
 
         @test fixed_size_comps(10,3) == 36
-        @test fixed_size_comps(10,3) == 50
+        @test fixed_size_comps_asym(10,3) == 50
 
 
     end
