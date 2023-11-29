@@ -146,8 +146,8 @@ function p_val_weighted(p,q,l,n)
             return(NaN)
     end 
 
-    weighted_coeffs = map(x->weighted_bin_runs_coeff(p,q,x,n),0:1:n)
+    weighted_coeffs = map(x->weighted_bin_runs_coeff(p,q,x,n),(l-1):1:n)
     probs = diff(weighted_coeffs)
-    Float64(sum(probs[l:n]))
+    Float64(sum(probs))
 
 end
