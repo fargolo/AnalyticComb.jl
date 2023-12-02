@@ -8,9 +8,9 @@ Reexport = "189a3867-3050-52da-a836-e630ba90ab69"
 SymPy = "24249f21-da20-56a4-8eb1-6a02cf4ae2e6"
 
 [compat]
+Reexport = "1.2"
+SymPy = "1.2, 2"
 julia = "1"
-Reexport = "1.2" 
-SymPy = "1.2"
 
 [extras]
 Test = "8dfed614-e22c-5e08-85e1-65c5234f0b40"
