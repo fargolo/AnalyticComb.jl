@@ -54,7 +54,7 @@ For instance, among binary words with 10 letters, there are 45 words with 4 ``b`
 """
 function bin_words_with_k_occurences_constr(k,n,d)
     # Binomial convolution. See page 52 in Flaj  & Sedg.
-    accum = []
+    accum = Int128[]
     for j in 0:Int(round(n/d))
         if(j>=k-1  || j*d >=n)
             break
