@@ -1,7 +1,7 @@
 
 # Installation  
 
-Python package sympy is required. SymPy.jl functionalities are reexported in `AnalyticComb.jl`.   
+Python package sympy is required for some functionalities. SymPy.jl is reexported in `AnalyticComb.jl`.   
 
 ```
 $python -m pip install --upgrade pip

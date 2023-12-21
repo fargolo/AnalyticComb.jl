@@ -3,12 +3,14 @@
 
 Integers as combinatorial structures 
 
-``I(z)= \\sum_{n \\geq 1} z^n = \\frac{z}{1-z}``
+``I(z)= \\sum_{n \\geq 1} z^n = \\frac{z}{1-z}``.  
+Returns a SymPy `:Sym` object.  
 """
-function I_gf(z)
+function I_gf()
     z = SymPy.symbols("z")
     return(z*SEQ(z))
 end
+
 
 """
     partitions_gf(z,max)
@@ -16,10 +18,12 @@ end
 Generating function for integer partitions.
 
 Defined as ``P(z) = \\prod_{m = 1}^{\\infty} \\frac{1}{1-z^m}``  
-Use `series` to obtain counts(EIS A000041): `series(partitions_gf(z,10),z,0,8)` for n up to 8.
+Returns a SymPy `:Sym` object.  
+Use `SymPy.series` to obtain counts(EIS A000041): `SymPy.series(partitions_gf(z,10),z,0,8)` for n up to 8.  
 """
 function partitions_gf(z,max)
     n = SymPy.symbols("n")
+    z = SymPy.symbols("z")
     prod([1/(1-z^n) for n in 1:max])
 end
 #MSET(I_gf(z)) yields the correct gen. function, as in page 41 (equation 38), 
@@ -48,6 +52,7 @@ primes_composition_asym(n) = 0.30365 * 1.47622^n
     restricted_sum_comp_gf(r)
 
 Generating function for compositions with restricted summand.
+Returns a SymPy `:Sym` object.      
 """
 function restricted_sum_comp_gf(r)
     z = SymPy.symbols("z")
@@ -63,16 +68,17 @@ r = 2 yields Fibonnaci numbers (EIS A000045): ``F_{n} = F_{n-1} + F_{n-2}``.
 r>2 yields generalized Fibonacci numbers.
 """
 function restricted_sum_comp(n,r)
-    z = SymPy.symbols("z")
-    coefs = collect(series(restricted_sum_comp_gf(r),z,0,n+1),z)
-    return(coefs.coeff(z,n))
+    restricted_sum_comp_gf(z,r) = (1-z)/(1-2z+z^(r+1))
+    taylor_ser = TaylorSeries.taylor_expand(z -> restricted_sum_comp_gf(z,r),order=n+1)
+    return(TaylorSeries.getcoeff(taylor_ser,n))
 end
 
 
 """
     restricted_sum_part_gf(r)
 
-Generating function for partition with restricted summand.
+Generating function for partition with restricted summand.  
+Returns a SymPy `:Sym` object.  
 """
 function restricted_sum_part_gf(r)
     z = SymPy.symbols("z")
@@ -87,9 +93,9 @@ Number of partitions with components in r with restricted summand n.
 n must be an integer and r must be a set of integers, like in r = [1,5,10,25] , n = 99.
 """
 function restricted_sum_part(n,r)
-    z = SymPy.symbols("z")
-    coefs = collect(series(restricted_sum_part_gf(r),z,0,n+1),z)
-    return(coefs.coeff(z,n))
+    restricted_sum_part_gf(z,r) = prod([SEQ(z^i) for i in r])
+    taylor_ser = TaylorSeries.taylor_expand(z -> restricted_sum_part_gf(z,r),order=n+1)
+    return(TaylorSeries.getcoeff(taylor_ser,n))
 end
 
 """

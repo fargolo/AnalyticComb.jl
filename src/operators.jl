@@ -14,6 +14,7 @@ SEQ(z) = 1/(1-z)
 Multiset operator (Pólya exponential operator).  
 
 Defined as ``A = MSET(B) \\implies A(z) = exp(\\sum_{1}^{\\infty} \\frac{1}{k} B(z^k))``.
+Returns a SymPy `:Sym` object.  
 """
 function MSET(z,max)
     n = SymPy.symbols("n")
@@ -29,6 +30,7 @@ end
 Powerset operator (modified Pólya exponential operator).  
 
 Defined as ``A = PSET(B) \\implies A(z) = exp(\\sum_{1}^{\\infty} \\frac{(-1)^{k-1}}{k} B(z^k))``.
+Returns a SymPy `:Sym` object.  
 """
 function PSET(z,max)
     n = SymPy.symbols("n")
@@ -42,6 +44,7 @@ end
 Cycle operator (Pólya logarithm).  
 
 Defined as ``A = CYC(B) \\implies A(z) = \\sum_{1}^{\\infty} \\frac{\\phi(k)}{k} log \\frac{1}{1-z^k}``.
+Returns a SymPy `:Sym` object.  
 """
 function CYC(z,max)
     n = SymPy.symbols("n")

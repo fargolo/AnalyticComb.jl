@@ -7,11 +7,10 @@ for an alphabet of cardinality m (defaults to binary words: m=2).
 ``\\frac{1 - z^k}{ 1 - mz + (m-1)z^{k+1} }``
 For instance, if n=4 and k=3, these words are not counted: aaab, baaa, aaaa.  
 """
-function words_without_k_run(k,n;m=2)
-    z = SymPy.symbols("z") 
-    word_run_ogf = (1-z^k)/(1 - m*z + (m-1)*z^(k+1))
-    coefs = collect(series(word_run_ogf,z,0,n+1),z)
-    coefs.coeff(z,n)
+function words_without_k_run(k,n;m=2) 
+    word_run_ogf(m,k,z) = (1-z^k)/(1 - m*z + (m-1)*z^(k+1))
+    taylor_ser = TaylorSeries.taylor_expand(z -> word_run_ogf(m,k,z),order=n+1)
+    TaylorSeries.getcoeff(taylor_ser,n)
 end
 
 """
@@ -36,11 +35,12 @@ For instance, among binary words with 10 letters, there are 210 words  with 4 ``
 (``[z^{10}]L(z) = 210``)
 """
 function bin_words_with_k_occurences(k,n)
-    z = SymPy.symbols("z") 
-    word_ogf = (z^k)/((1 - z)^(k+1))
-    coefs = collect(series(word_ogf,z,0,n+1),z)
-    coefs.coeff(z,n)
+    word_ogf(z,k) = (z^k)/((1 - z)^(k+1))
+    taylor_ser = TaylorSeries.taylor_expand(z->word_ogf(z,k),n+1)
+    TaylorSeries.getcoeff(taylor_ser,n)
 end
+
+
 
 """
     bin_words_with_k_occurences_constr(k,n,d)
@@ -78,13 +78,11 @@ The number of binary words that never have more than r consecutive identical let
 n_tot defaults to 200, according to the example in Flajolet & Sedgewick pag. 52
 """
 function W_coeff(r;n_tot=200)
-
-    z = SymPy.symbols("z") 
     w_rr(r,z) = (1-z^(r+1))/(1-2z+z^(r+1)) # OGF
     #w_rr(r,z) = sum(z^x for x in 0:r)/(1 - sum(z^x for x in 1:r)) # Alternate form
 
-    coefs = collect(series(w_rr(r,z),z,0,n_tot+1),z)
-    coefs.coeff(z,n_tot)
+    coefs = TaylorSeries.taylor_expand(z -> w_rr(r,z),order=n_tot+1)
+    TaylorSeries.getcoeff(coefs,n_tot)
     
 end
 
@@ -108,7 +106,6 @@ end
 
 
 
-
 """
     weighted_bin_runs_coeff(p,q,l,n)
 
@@ -119,19 +116,19 @@ Probablity of the absence of l-runs among a sequence of n random trials with pro
 Use diff over output values to obtain a probability distribution. For n=15, p=0.4 and q=0.6:
 `raw_probs = map(x->weighted_bin_runs_coeff(0.4,0.6,x,15),0:1:15);plot(diff(raw_probs))`  
 """
-function weighted_bin_runs_coeff(p,q,l,n)
+function weighted_bin_runs_coeff_nat(p,q,l,n)
 
     if (p+q - 1 > 0.01) || (l > n)
         println("p + q must be equal to 1 and l <= n")
             return(NaN)
     end 
 
-    z = SymPy.symbols("z") 
-    wei_mgf = (1 - p^l * z^l )/(1 - z + q*(p^l)*(z^(l+1))) # OGF
-    coefs = collect(series(wei_mgf,z,0,n+1),z)
-    coefs.coeff(z,n)
+    wei_mgf(p,q,l,z) = (1 - p^l * z^l )/(1 - z + q*(p^l)*(z^(l+1)))
+    tay_exp = TaylorSeries.taylor_expand(z -> wei_mgf(p,q,l,z),order=n+1)
+    TaylorSeries.getcoeff(tay_exp,n)
 
 end
+
 
 
 """

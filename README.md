@@ -16,15 +16,15 @@ Given any constructable combinatorial structure, one can use a set of operators 
 
 See the [docs](https://fargolo.github.io/AnalyticComb.jl/dev/).
 
-Check the text book by Flajolet & Sedgewick ( https://algo.inria.fr/flajolet/Publications/book.pdf ) and Coursera's full course by Robert Sedgewick ( https://www.coursera.org/learn/analytic-combinatorics ) for more.  
+Check the text book by [Flajolet & Sedgewick](https://algo.inria.fr/flajolet/Publications/book.pdf) and [Coursera's full course by Robert Sedgewick](https://www.coursera.org/learn/analytic-combinatorics) for more.  
 
-Kudos to Ricardo Bittencourt ( https://github.com/ricbit/ ) for his introductory texts on the subject and for helping in an initial implementation.
+Kudos to [Ricardo Bittencourt](https://github.com/ricbit/) for his introductory texts on the subject and for helping in an initial implementation.  
 
 # Quick start  
 
-## Install
+## Install  
 
-Python package sympy is required. 
+Python package sympy is required for some utilities.  
 
 ```
 $python -m pip install --upgrade pip

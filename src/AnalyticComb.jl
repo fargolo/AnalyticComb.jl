@@ -2,6 +2,7 @@ module AnalyticComb
 
 #using SymPy
 using Reexport
+using TaylorSeries
 
 @reexport using SymPy
 

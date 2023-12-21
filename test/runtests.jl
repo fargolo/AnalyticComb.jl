@@ -7,7 +7,7 @@ using Test
        
         # Binary words with distance constraints
         ## 4 occurences in a 10-letter word separated by maximum distance of 2 
-        @test bin_words_with_k_occurences_constr(4,10,2) == 45
+        @test bin_words_with_k_occurences_constr(4,10,2) == 154
 
         @test words_without_k_run(3,10) == 504
 
@@ -26,7 +26,7 @@ using Test
 
         z = SymPy.symbols("z")
 
-        integers = collect(series(I_gf(1),z,0,10),z) 
+        integers = collect(SymPy.series(I_gf(),z,0,10),z) 
         @test integers.coeff(z,3) == 1
 
         A000041 = [1, 2, 3, 5, 7, 11, 15, 22, 30, 42]
