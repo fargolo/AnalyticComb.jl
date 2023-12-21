@@ -25,7 +25,7 @@ Given any constructable combinatorial structure, one can use a set of operators 
 
 # Introduction  
 
-For newcomers, this an analytic approach to combinatorial problems. Modelling this type of problem often relies on intuitive arguments. The symbolic method describe such situations with a grammar of operators: Sum, Cartesian product, Sequence, Multiset, Powerset and Cycle. Such operators yield an algebraic expression (e.g. ``P(z)``), called the generating function, which is directly related to the problem via complex analysis. We are generally interested in the coefficients of its series expansion. That is, let the series expansion of ``P(z)`` be ``T(P(z)) = \sum_{n=1}^{\infty} a_n x^n``. Then, the values of ``a^n`` correspond to the counts of objects of size ``n`` in this combinatorial class.  
+For newcomers, this an analytic approach to combinatorial problems. Modelling this type of problem often relies on intuitive arguments. The symbolic method describe such situations with a grammar of operators: Sum, Cartesian product, Sequence, Multiset, Powerset and Cycle. Such operators yield an algebraic expression (e.g. ``P(z)``), called the generating function, which is directly related to the problem via complex analysis. We are generally interested in the coefficients of its series expansion. That is, let the series expansion of ``P(z)`` be ``T(P(z)) = \sum_{n=1}^{\infty} a_n x^n``. Then, the values of ``a_n`` correspond to the counts of objects of size ``n`` in this combinatorial class.  
 
 For instance, the number of binary words (e.g. abababbabab...) of size n is given by ``W_n = 2^n``. Using the sequence operator (``SEQ(A) \implies A(z) = \frac{1}{1-z}``) , we find the generating function:  
 
