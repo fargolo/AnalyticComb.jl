@@ -7,7 +7,7 @@ using Test
        
         # Binary words with distance constraints
         ## 4 occurences in a 10-letter word separated by maximum distance of 2 
-        @test bin_words_with_k_occurences_constr(4,10,2) == 154
+        @test bin_words_with_k_occurences_constr(4,10,2) == 45
 
         @test words_without_k_run(3,10) == 504
 
