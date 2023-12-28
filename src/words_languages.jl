@@ -116,7 +116,7 @@ Probablity of the absence of l-runs among a sequence of n random trials with pro
 Use diff over output values to obtain a probability distribution. For n=15, p=0.4 and q=0.6:
 `raw_probs = map(x->weighted_bin_runs_coeff(0.4,0.6,x,15),0:1:15);plot(diff(raw_probs))`  
 """
-function weighted_bin_runs_coeff_nat(p,q,l,n)
+function weighted_bin_runs_coeff(p,q,l,n)
 
     if (p+q - 1 > 0.01) || (l > n)
         println("p + q must be equal to 1 and l <= n")
