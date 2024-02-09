@@ -11,7 +11,7 @@ using Test
 
         @test words_without_k_run(3,10) == 504
 
-        binary_double_results = map(i->p_binary_words_doub_runl(i,200),3:12)
+        binary_double_results = map(i->bin_words_runs_prob(i,200),3:12)
              
         # Check if any of the results presents error > 0.01
         @test sum(binary_double_results - map(x-> round(x;digits=3),

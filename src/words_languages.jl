@@ -70,14 +70,14 @@ end
 
 
 """
-    W_coeff(r;n_tot=200)
+    bin_words_runs_coeff(r;n_tot=200)
 
-Taylor series coefficient from generating function for binary words that never have more than r consecutive identical letters. 
+Taylor series coefficient from generating function for binary words (when p=q=prob(a)=prob(b)) that never have more than r consecutive identical letters. 
 
 The number of binary words that never have more than r consecutive identical letters is found to be (set α = β = r).
 n_tot defaults to 200, according to the example in Flajolet & Sedgewick pag. 52
 """
-function W_coeff(r;n_tot=200)
+function bin_words_runs_coeff(r;n_tot=200)
     w_rr(r,z) = (1-z^(r+1))/(1-2z+z^(r+1)) # OGF
     #w_rr(r,z) = sum(z^x for x in 0:r)/(1 - sum(z^x for x in 1:r)) # Alternate form
 
@@ -88,19 +88,19 @@ end
 
 
 """
-    p_binary_words_doub_runl(k,n)
+    bin_words_runs_prob(k,n)
 
-Returns probablity associatied with k-lenght double runs (or either ``a``s or ``b``s) in a sequence of size n.   
+Returns probablity associatied with k-lenght double runs (or either ``a``s or ``b``s) in a sequence of size n (when p=q=prob(a)=prob(b)).   
 
 ``W ∼= SEQ(b) SEQ(a SEQ(a) b SEQ(b)) SEQ(a).``
 For instance, if n=5 and k=2, the probability of obtaining strings such as bbaab and aabba.  
 """
-function p_binary_words_doub_runl(k,n)
+function bin_words_runs_prob(k,n)
     #a =  FastRational{Int128}(1/(2^n))
     #a = Rational{BigInt}(1/(2^n))
     a = 1//(BigInt(2)^n)
     #a = 1/(2^n)
-    result_sym = a*(W_coeff(k;n_tot=n) - W_coeff(k-1;n_tot=n))
+    result_sym = a*(bin_words_runs_coeff(k;n_tot=n) - bin_words_runs_coeff(k-1;n_tot=n))
     return(Float64(result_sym))
 end
 
@@ -109,7 +109,7 @@ end
 """
     weighted_bin_runs_coeff(p,q,l,n)
 
-Weighted model for consecutive runs.  
+Weighted model for consecutive runs in binary words.  
     
 Probablity of the absence of l-runs among a sequence of n random trials with probabilities p and q.   
 ``[z^{n}] \\frac{1 - p^l z^l}{1 - z + q p^l z^{l+1}}``.
@@ -132,11 +132,11 @@ end
 
 
 """
-    p_val_weighted(p,q,l,n)
+    weighted_bin_runs_prob(p,q,l,n)
 
 p-value obtained from a one-tailed based on the exact distribution using the weighted model for consecutive runs `weighted_bin_runs_coeff`.  
 """
-function p_val_weighted(p,q,l,n)
+function weighted_bin_runs_prob(p,q,l,n)
 
     if (p+q - 1 > 0.01) || (l > n)
         println("p + q must be equal to 1 and l <= n")
