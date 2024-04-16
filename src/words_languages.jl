@@ -9,7 +9,7 @@ For instance, if n=4 and k=3, these words are not counted: aaab, baaa, aaaa.
 """
 function words_without_k_run(k,n;m=2) 
     word_run_ogf(m,k,z) = (1-z^k)/(1 - m*z + (m-1)*z^(k+1))
-    taylor_ser = TaylorSeries.taylor_expand(z -> word_run_ogf(m,k,z),order=n+1)
+    taylor_ser = TaylorSeries.taylor_expand(z -> word_run_ogf(m,k,z),0;order=n+1)
     TaylorSeries.getcoeff(taylor_ser,n)
 end
 
@@ -36,7 +36,7 @@ For instance, among binary words with 10 letters, there are 210 words  with 4 ``
 """
 function bin_words_with_k_occurences(k,n)
     word_ogf(z,k) = (z^k)/((1 - z)^(k+1))
-    taylor_ser = TaylorSeries.taylor_expand(z->word_ogf(z,k),n+1)
+    taylor_ser = TaylorSeries.taylor_expand(z->word_ogf(z,k),0;order=n+1)
     TaylorSeries.getcoeff(taylor_ser,n)
 end
 
@@ -81,7 +81,7 @@ function bin_words_runs_coeff(r;n_tot=200)
     w_rr(r,z) = (1-z^(r+1))/(1-2z+z^(r+1)) # OGF
     #w_rr(r,z) = sum(z^x for x in 0:r)/(1 - sum(z^x for x in 1:r)) # Alternate form
 
-    coefs = TaylorSeries.taylor_expand(z -> w_rr(r,z),order=n_tot+1)
+    coefs = TaylorSeries.taylor_expand(z -> w_rr(r,z),0;order=n_tot+1)
     TaylorSeries.getcoeff(coefs,n_tot)
     
 end
@@ -124,7 +124,7 @@ function weighted_bin_runs_coeff(p,q,l,n)
     end 
 
     wei_mgf(p,q,l,z) = (1 - p^l * z^l )/(1 - z + q*(p^l)*(z^(l+1)))
-    tay_exp = TaylorSeries.taylor_expand(z -> wei_mgf(p,q,l,z),order=n+1)
+    tay_exp = TaylorSeries.taylor_expand(z -> wei_mgf(p,q,l,z),0;order=n+1)
     TaylorSeries.getcoeff(tay_exp,n)
 
 end

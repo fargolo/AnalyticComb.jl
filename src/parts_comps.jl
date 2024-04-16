@@ -69,7 +69,7 @@ r>2 yields generalized Fibonacci numbers.
 """
 function restricted_sum_comp(n,r)
     restricted_sum_comp_gf(z,r) = (1-z)/(1-2z+z^(r+1))
-    taylor_ser = TaylorSeries.taylor_expand(z -> restricted_sum_comp_gf(z,r),order=n+1)
+    taylor_ser = TaylorSeries.taylor_expand(z -> restricted_sum_comp_gf(z,r),0;order=n+1)
     return(TaylorSeries.getcoeff(taylor_ser,n))
 end
 
@@ -94,7 +94,7 @@ n must be an integer and r must be a set of integers, like in r = [1,5,10,25] , 
 """
 function restricted_sum_part(n,r)
     restricted_sum_part_gf(z,r) = prod([SEQ(z^i) for i in r])
-    taylor_ser = TaylorSeries.taylor_expand(z -> restricted_sum_part_gf(z,r),order=n+1)
+    taylor_ser = TaylorSeries.taylor_expand(z -> restricted_sum_part_gf(z,r),0;order=n+1)
     return(TaylorSeries.getcoeff(taylor_ser,n))
 end
 
