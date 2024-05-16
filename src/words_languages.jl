@@ -107,16 +107,16 @@ end
 
 
 """
-    weighted_bin_runs_coeff(p,q,l,n)
+    weighted_bin_runs_prob(p,q,l,n)
 
 Weighted model for consecutive runs in binary words.  
     
 Probablity of the absence of l-runs among a sequence of n random trials with probabilities p and q.   
 ``[z^{n}] \\frac{1 - p^l z^l}{1 - z + q p^l z^{l+1}}``.
 Use diff over output values to obtain a probability distribution. For n=15, p=0.4 and q=0.6:
-`raw_probs = map(x->weighted_bin_runs_coeff(0.4,0.6,x,15),0:1:15);plot(diff(raw_probs))`  
+`raw_probs = map(x->weighted_bin_runs_prob(0.4,0.6,x,15),0:1:15);plot(diff(raw_probs))`  
 """
-function weighted_bin_runs_coeff(p,q,l,n)
+function weighted_bin_runs_prob(p,q,l,n)
 
     if (p+q - 1 > 0.01) || (l > n)
         println("p + q must be equal to 1 and l <= n")
@@ -132,18 +132,18 @@ end
 
 
 """
-    weighted_bin_runs_prob(p,q,l,n)
+    weighted_bin_runs_pval(p,q,l,n)
 
 p-value obtained from a one-tailed based on the exact distribution using the weighted model for consecutive runs `weighted_bin_runs_coeff`.  
 """
-function weighted_bin_runs_prob(p,q,l,n)
+function weighted_bin_runs_pval(p,q,l,n)
 
     if (p+q - 1 > 0.01) || (l > n)
         println("p + q must be equal to 1 and l <= n")
             return(NaN)
     end 
 
-    weighted_coeffs = map(x->weighted_bin_runs_coeff(p,q,x,n),(l-1):1:n)
+    weighted_coeffs = map(x->weighted_bin_runs_prob(p,q,x,n),(l-1):1:n)
     probs = diff(weighted_coeffs)
     Float64(sum(probs))
 
