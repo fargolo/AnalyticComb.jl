@@ -38,5 +38,55 @@ julia> restricted_sum_part(99,[1,5,10,25]) # Counts for 99 as a sum of elements 
 213
 ```
 
+# Bivariate Generating Functions (BGFs) & Exact Moments
+
+Following Chapter III (*Combinatorial Parameters and Multivariate Generating Functions*) of Flajolet & Sedgewick[^2], an auxiliary variable ``u`` can **mark** a combinatorial parameter ``\chi`` while ``z`` marks the size ``n``:
+
+$$A(z, u) = \sum_{n, k \ge 0} a_{n,k} z^n u^k$$
+
+By **Proposition III.2 (Moments from BGFs, p. 158)**, differentiating ``A(z, u)`` with respect to ``u`` and evaluating at ``u = 1`` yields the exact factorial moments of ``\chi`` over objects of size ``n``:
+
+$$\mathbb{E}_n(\chi) = \frac{[z^n] \partial_u A(z, u)|_{u=1}}{[z^n] A(z, 1)}, \qquad \mathbb{E}_n(\chi(\chi - 1)) = \frac{[z^n] \partial_u^2 A(z, u)|_{u=1}}{[z^n] A(z, 1)}$$
+
+## Summands in Integer Compositions (Example III.5)
+
+Using the marked sequence operator `SEQ(B, u)` where ``u`` marks each summand in ``I(z) = \frac{z}{1-z}``, `bgf_moments` extracts the exact mean, variance, standard deviation, and total count:
+
+```julia-repl
+julia> using AnalyticComb
+
+julia> z, u = SymPy.symbols("z u");
+
+julia> C_zu = SEQ(z / (1 - z), u) # BGF for compositions with u marking number of summands
+     1     
+───────────
+    u⋅z    
+1 - ───────
+     1 - z 
+
+julia> bgf_moments(C_zu, 10; z=z, u=u)
+(mean = 5.5, var = 2.25, std = 1.5, count = 512.0)
+```
+
+## Marked Consecutive Runs in Weighted Binary Words
+
+For Bernoulli trials with probabilities ``(p, q)``, `weighted_bin_runs_bgf` and `weighted_bin_runs_moments` mark run statistics of threshold ``l`` across sequences of length ``n``:
+
+- `mode="count_ge"`: Number of maximal runs of length ``\ge l``
+- `mode="length_ge"`: Total number of elements belonging to runs of length ``\ge l`` (the numerator of RQA **Determinism**)
+- `mode="count_eq"`: Number of maximal runs of exact length ``l``
+- `mode="double_count_ge"`: Number of maximal runs of either outcome (``p`` or ``q``) of length ``\ge l``
+
+```julia-repl
+julia> weighted_bin_runs_moments(0.5, 0.5, 3, 50; mode="count_ge")
+(mean = 3.25, var = 1.796875, std = 1.340475661845451, count = 1.0)
+
+julia> weighted_bin_runs_moments(0.5, 0.5, 3, 50; mode="length_ge")
+(mean = 12.75, var = 31.046875, std = 5.571972271992566, count = 1.0)
+```
+
+![BGF Exact Moments for Binary Runs](assets/bgf_moments_runs.png)
+
 
 [^1]: Flajolet, P., & Sedgewick, R. (2009). Analytic combinatorics. Cambridge University press. Page 43
+[^2]: Ibid. Chapter III, Pages 158–170

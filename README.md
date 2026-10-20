@@ -52,5 +52,23 @@ julia>restricted_sum_part(99,[1,5,10,25]) # Counts for 99 as a sum of elements i
 213
 ```
 
+## Marked Bivariate Generating Functions & Exact Moments
+
+Using an auxiliary variable $u$ to mark combinatorial parameters (Chapter III of Flajolet & Sedgewick), `bgf_moments` and `weighted_bin_runs_moments` compute exact analytical expectations, variances, and standard deviations via symbolic/automatic differentiation at $u = 1$:
+
+```julia
+julia> using AnalyticComb
+
+julia> z, u = SymPy.symbols("z u");
+
+julia> bgf_moments(SEQ(z / (1 - z), u), 10; z=z, u=u) # Summands in compositions of n=10
+(mean = 5.5, var = 2.25, std = 1.5, count = 512.0)
+
+julia> weighted_bin_runs_moments(0.4, 0.6, 3, 50; mode="length_ge") # Total points in runs >= 3
+(mean = 6.72, var = 20.677632, std = 4.547266431604816, count = 1.0)
+```
+
+![BGF Exact Moments for Binary Runs](docs/src/assets/bgf_moments_runs.png)
+
 [^1]: Flajolet, P., & Sedgewick, R. (2009). Analytic combinatorics. Cambridge University press. Page 20
 [^2]: Ibid. page 43

@@ -148,3 +148,54 @@ function weighted_bin_runs_pval(p,q,l,n)
     Float64(sum(probs))
 
 end
+
+
+"""
+    weighted_bin_runs_bgf(p, q, l, z, u; mode="count_ge")
+
+Weighted Bivariate Generating Function (BGF) ``W(z, u)`` for consecutive runs in binary words of Bernoulli trials
+with probabilities ``p`` and ``q``, where ``z`` marks sequence length ``n`` and ``u`` marks a run parameter
+(Flajolet & Sedgewick, Sections I.4 & III.3):
+
+- `mode="count_ge"` (default): ``u`` marks the **number of maximal runs of length ``\\ge l``**:
+  ``W(z, u) = \\frac{1 + (u - 1) p^l z^l}{1 - (p + q)z - (u - 1) q p^l z^{l+1}}``
+- `mode="length_ge"`: ``u`` marks the **total number of elements belonging to maximal runs of length ``\\ge l``**
+  (the numerator of RQA Determinism / Laminarity):
+  ``W(z, u) = \\frac{1 + \\beta(z, u)}{1 - qz(1 + \\beta(z, u))}``, where ``\\beta(z, u) = \\frac{pz - p^l z^l}{1 - pz} + \\frac{(upz)^l}{1 - upz}``
+- `mode="count_eq"`: ``u`` marks the **number of maximal runs of exact length ``l``**:
+  ``W(z, u) = \\frac{1 + (u - 1) p^l z^l (1 - pz)}{1 - (p + q)z - (u - 1) q p^l z^{l+1} (1 - pz)}``
+- `mode="double_count_ge"`: ``u`` marks the **number of maximal runs of either outcome (``p`` or ``q``) of length ``\\ge l``**.
+"""
+function weighted_bin_runs_bgf(p, q, l, z, u; mode="count_ge")
+    if mode == "count_ge"
+        return (1 + (u - 1) * (p^l) * (z^l)) / (1 - (p + q)*z - (u - 1) * q * (p^l) * (z^(l+1)))
+    elseif mode == "length_ge"
+        beta_zu = (p*z - (p^l)*(z^l)) / (1 - p*z) + ((u*p*z)^l) / (1 - u*p*z)
+        return (1 + beta_zu) / (1 - q*z*(1 + beta_zu))
+    elseif mode == "count_eq"
+        return (1 + (u - 1) * (p^l) * (z^l) * (1 - p*z)) / (1 - (p + q)*z - (u - 1) * q * (p^l) * (z^(l+1)) * (1 - p*z))
+    elseif mode == "double_count_ge"
+        alpha_zu = (q*z + (u - 1)*(q^l)*(z^l)) / (1 - q*z)
+        beta_zu = (p*z + (u - 1)*(p^l)*(z^l)) / (1 - p*z)
+        return (1 + alpha_zu) * (1 + beta_zu) / (1 - alpha_zu * beta_zu)
+    else
+        error("Unsupported mode '$mode'. Must be one of: \"count_ge\", \"length_ge\", \"count_eq\", \"double_count_ge\".")
+    end
+end
+
+
+"""
+    weighted_bin_runs_moments(p, q, l, n; mode="count_ge")
+
+Exact analytical moments `(mean, var, std, count)` for run statistics in a weighted binary sequence of length `n`
+with probabilities `p` and `q` and run threshold `l`, obtained by differentiating `weighted_bin_runs_bgf` at ``u = 1``.
+
+See [`weighted_bin_runs_bgf`](@ref) for available `mode` options (`"count_ge"`, `"length_ge"`, `"count_eq"`, `"double_count_ge"`).
+"""
+function weighted_bin_runs_moments(p, q, l, n; mode="count_ge")
+    if abs(p + q - 1) > 0.01 || (l > n) || (l < 1)
+        println("p + q must be equal to 1 and 1 <= l <= n")
+        return (mean = NaN, var = NaN, std = NaN, count = NaN)
+    end
+    return bgf_moments((z, u) -> weighted_bin_runs_bgf(p, q, l, z, u; mode=mode), n)
+end

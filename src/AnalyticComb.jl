@@ -7,8 +7,8 @@ using TaylorSeries
 @reexport using SymPy
 
 export
-	#basic operators
-	SEQ, MSET, PSET, CYC, 
+	#basic operators and BGF moments
+	SEQ, MSET, PSET, CYC, bgf_moments,
 	
 	#misc
 	stirling_factorial_asym, stirling_catalan_asym, catalan_factorial, general_trees, triangulations, 
@@ -21,7 +21,8 @@ export
 	#words and regular languages
 	words_without_k_run, longest_run_binary_asym, 
 	bin_words_with_k_occurences, bin_words_with_k_occurences_constr,
-	bin_words_runs_prob, weighted_bin_runs_pval , weighted_bin_runs_prob
+	bin_words_runs_prob, weighted_bin_runs_pval , weighted_bin_runs_prob,
+	weighted_bin_runs_bgf, weighted_bin_runs_moments
 
 include("operators.jl")
 include("misc.jl")
