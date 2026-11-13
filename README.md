@@ -70,5 +70,16 @@ julia> weighted_bin_runs_moments(0.4, 0.6, 3, 50; mode="length_ge") # Total poin
 
 ![BGF Exact Moments for Binary Runs](docs/src/assets/bgf_moments_runs.png)
 
+## Markov Runs, Patterns, Transfer Graphs & Singularity Analysis
+
+`AnalyticComb.jl` also provides analytical tools for autocorrelated processes, pattern matching, graph dynamics, and pole extraction (Chapters III–V):
+
+- **Markov Binary Runs:** `estimate_markov_params`, `markov_bin_runs_bgf`, `markov_bin_runs_moments`, `markov_bin_runs_pval`
+- **Motif & Pattern Occurrences:** `autocorrelation_poly`, `pattern_occurrences_bgf`, `pattern_occurrences_moments`, `pattern_waiting_prob`, `pattern_pval`
+- **Transfer Matrices, Graphs & Random Mappings:** `transfer_matrix_moments`, `transfer_matrix_gf`, `graph_walks_count`, `graph_closed_walks_gf`, `random_mapping_moments`
+- **Dominant Singularity / Pole Extraction:** `dominant_pole`, `runs_dominant_pole`, `markov_dominant_pole`
+
+See the [Markov, Patterns & Graphs Vignette](docs/src/vignette_markov_graphs.md) for worked data-analysis examples.
+
 [^1]: Flajolet, P., & Sedgewick, R. (2009). Analytic combinatorics. Cambridge University press. Page 20
 [^2]: Ibid. page 43

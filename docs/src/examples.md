@@ -87,6 +87,15 @@ julia> weighted_bin_runs_moments(0.5, 0.5, 3, 50; mode="length_ge")
 
 ![BGF Exact Moments for Binary Runs](assets/bgf_moments_runs.png)
 
+# Markov Chains, Motif Patterns, Transfer Graphs & Poles
+
+See the dedicated **[Markov, Patterns & Graphs Vignette](vignette_markov_graphs.md)** for worked examples and interpretations covering:
+
+- 1st-order Markov run moments & p-values (`estimate_markov_params`, `markov_bin_runs_moments`, `markov_bin_runs_pval`)
+- Exact Guibas–Odlyzko autocorrelation polynomials & pattern tail p-values (`autocorrelation_poly`, `pattern_occurrences_moments`, `pattern_pval`)
+- Transfer-matrix BGF moments, directed graph walks, dynamical zeta polynomials $\det(\mathbf{I}-z\mathbf{A})$, and random mappings (`transfer_matrix_moments`, `graph_closed_walks_gf`, `random_mapping_moments`)
+- Dominant generating-function singularities (`dominant_pole`, `runs_dominant_pole`, `markov_dominant_pole`)
+
 
 [^1]: Flajolet, P., & Sedgewick, R. (2009). Analytic combinatorics. Cambridge University press. Page 43
 [^2]: Ibid. Chapter III, Pages 158–170

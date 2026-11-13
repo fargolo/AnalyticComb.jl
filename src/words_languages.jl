@@ -199,3 +199,299 @@ function weighted_bin_runs_moments(p, q, l, n; mode="count_ge")
     end
     return bgf_moments((z, u) -> weighted_bin_runs_bgf(p, q, l, z, u; mode=mode), n)
 end
+
+
+# ---------------------------------------------------------------------------
+# Phase 1.1: 1st-Order Markov Binary Run BGFs, Probabilities & Moments
+# ---------------------------------------------------------------------------
+
+"""
+    estimate_markov_params(seq::AbstractVector{<:Integer}; laplace::Real=0.0)
+    estimate_markov_params(seqs::AbstractVector{<:AbstractVector{<:Integer}}; laplace::Real=0.0)
+
+Estimate 1st-order Markov transition probabilities `(p00, p01, p10, p11, p_stat, q_stat)`
+from a binary sequence (or collection of sequences) with elements in `{0, 1}`.
+Optional `laplace` adds pseudocount smoothing to each transition cell.
+"""
+function estimate_markov_params(seq::AbstractVector{<:Integer}; laplace::Real=0.0)
+    return estimate_markov_params([seq]; laplace=laplace)
+end
+
+function estimate_markov_params(seqs::AbstractVector{<:AbstractVector{<:Integer}}; laplace::Real=0.0)
+    n00 = Float64(laplace)
+    n01 = Float64(laplace)
+    n10 = Float64(laplace)
+    n11 = Float64(laplace)
+    total_ones = 0
+    total_len = 0
+
+    for s in seqs
+        isempty(s) && continue
+        for x in s
+            (x == 0 || x == 1) || throw(ArgumentError("Sequence elements must be 0 or 1, got $x"))
+        end
+        total_ones += count(==(1), s)
+        total_len += length(s)
+        for i in 1:(length(s) - 1)
+            a, b = s[i], s[i + 1]
+            if a == 0 && b == 0
+                n00 += 1.0
+            elseif a == 0 && b == 1
+                n01 += 1.0
+            elseif a == 1 && b == 0
+                n10 += 1.0
+            else
+                n11 += 1.0
+            end
+        end
+    end
+
+    emp_p = total_len > 0 ? total_ones / total_len : 0.5
+    row0 = n00 + n01
+    row1 = n10 + n11
+
+    p01 = row0 > 0 ? n01 / row0 : emp_p
+    p00 = 1.0 - p01
+    p10 = row1 > 0 ? n10 / row1 : (1.0 - emp_p)
+    p11 = 1.0 - p10
+
+    denom = p01 + p10
+    p_stat = denom > 0 ? p01 / denom : emp_p
+    return (p00 = p00, p01 = p01, p10 = p10, p11 = p11, p_stat = p_stat, q_stat = 1.0 - p_stat)
+end
+
+
+"""
+    markov_bin_runs_bgf(p00, p01, p10, p11, l, z, u; mode="count_ge", init_probs=nothing)
+
+Exact 1st-order Markov Bivariate Generating Function ``W_{\\text{Markov}}(z, u)`` for consecutive
+runs in binary sequences, where ``z`` marks sequence length ``n`` and ``u`` marks the run statistic
+(Flajolet & Sedgewick, Sections I.4.2 & III.6.1):
+
+- `mode="count_ge"` (default): number of maximal 1-runs of length ``\\ge l``
+- `mode="length_ge"`: total number of elements belonging to 1-runs of length ``\\ge l``
+- `mode="count_eq"`: number of maximal 1-runs of exact length ``l``
+- `mode="double_count_ge"`: number of maximal runs of either 0 or 1 of length ``\\ge l``
+
+`init_probs` may be `(q0, p1)` giving initial probabilities ``(P(X_1=0), P(X_1=1))``;
+defaults to the stationary distribution ``q_{\\text{stat}} = 1 - p_{\\text{stat}}``,
+``p_{\\text{stat}} = p_{01} / (p_{01} + p_{10})``.
+"""
+function markov_bin_runs_bgf(p00, p01, p10, p11, l::Integer, z, u; mode="count_ge", init_probs=nothing)
+    l >= 1 || throw(ArgumentError("Run threshold l must be >= 1, got $l"))
+    if init_probs === nothing
+        denom = p01 + p10
+        p1 = denom > 0 ? p01 / denom : 0.5
+        q0 = 1.0 - p1
+    else
+        q0 = init_probs[1]
+        p1 = init_probs[2]
+    end
+
+    p11_pow = l == 1 ? one(p11) : p11^(l - 1)
+    p00_pow = l == 1 ? one(p00) : p00^(l - 1)
+    zl = z^l
+
+    if mode == "count_ge"
+        Z_block = z / (1 - p00 * z)
+        O_block = ((z - p11_pow * zl) + u * p11_pow * zl) / (1 - p11 * z)
+    elseif mode == "length_ge"
+        Z_block = z / (1 - p00 * z)
+        O_short = (z - p11_pow * zl) / (1 - p11 * z)
+        O_long = (u^l) * p11_pow * zl / (1 - u * p11 * z)
+        O_block = O_short + O_long
+    elseif mode == "count_eq"
+        Z_block = z / (1 - p00 * z)
+        O_block = z / (1 - p11 * z) + (u - 1) * p11_pow * zl
+    elseif mode == "double_count_ge"
+        Z_block = ((z - p00_pow * zl) + u * p00_pow * zl) / (1 - p00 * z)
+        O_block = ((z - p11_pow * zl) + u * p11_pow * zl) / (1 - p11 * z)
+    else
+        error("Unsupported mode '$mode'. Must be one of: \"count_ge\", \"length_ge\", \"count_eq\", \"double_count_ge\".")
+    end
+
+    core = 1 / (1 - p01 * p10 * Z_block * O_block)
+    return 1 + (q0 * Z_block + p1 * O_block + (q0 * p01 + p1 * p10) * Z_block * O_block) * core
+end
+
+
+function _validate_markov_probs(p00, p01, p10, p11)
+    if abs(p00 + p01 - 1.0) > 1e-4 || abs(p10 + p11 - 1.0) > 1e-4 ||
+       p00 < -1e-9 || p01 < -1e-9 || p10 < -1e-9 || p11 < -1e-9
+        throw(ArgumentError("Invalid Markov transition probabilities: rows (p00+p01, p10+p11) must be non-negative and sum to 1"))
+    end
+end
+
+
+"""
+    markov_bin_runs_moments(p00, p01, p10, p11, l, n; mode="count_ge", init_probs=nothing)
+
+Exact analytical moments `(mean, var, std, count)` for run statistics of threshold `l`
+in a 1st-order Markov binary sequence of length `n`.
+"""
+function markov_bin_runs_moments(p00, p01, p10, p11, l::Integer, n::Integer; mode="count_ge", init_probs=nothing)
+    _validate_markov_probs(p00, p01, p10, p11)
+    l >= 1 || throw(ArgumentError("Run threshold l must be >= 1, got $l"))
+    n >= 0 || throw(ArgumentError("Sequence length n must be >= 0, got $n"))
+    if n == 0 || (l > n)
+        return (mean = 0.0, var = 0.0, std = 0.0, count = 1.0)
+    end
+    return bgf_moments(
+        (z, u) -> markov_bin_runs_bgf(p00, p01, p10, p11, l, z, u; mode=mode, init_probs=init_probs),
+        n
+    )
+end
+
+
+"""
+    markov_bin_runs_prob(p00, p01, p10, p11, l, n; init_probs=nothing) -> Float64
+
+Exact probability of observing **zero** 1-runs of length ``\\ge l`` in a 1st-order Markov
+binary sequence of length `n` (i.e., ``P(L_n < l)`` where ``L_n`` is the longest 1-run).
+"""
+function markov_bin_runs_prob(p00, p01, p10, p11, l::Integer, n::Integer; init_probs=nothing)
+    _validate_markov_probs(p00, p01, p10, p11)
+    n >= 0 || throw(ArgumentError("Sequence length n must be >= 0, got $n"))
+    l <= 0 && return 0.0
+    (n == 0 || l > n) && return 1.0
+    z_tay = TaylorSeries.Taylor1(Float64, Int(n))
+    gf = markov_bin_runs_bgf(p00, p01, p10, p11, l, z_tay, 0.0; mode="count_ge", init_probs=init_probs)
+    return clamp(Float64(TaylorSeries.getcoeff(gf, Int(n))), 0.0, 1.0)
+end
+
+
+"""
+    markov_bin_runs_pval(p00, p01, p10, p11, l, n; init_probs=nothing) -> Float64
+
+Exact one-sided upper-tail ``p``-value ``P(L_n \\ge l) = 1 - P(L_n < l)`` for observing
+at least one consecutive 1-run of length ``\\ge l`` in a 1st-order Markov binary sequence of length `n`.
+"""
+function markov_bin_runs_pval(p00, p01, p10, p11, l::Integer, n::Integer; init_probs=nothing)
+    _validate_markov_probs(p00, p01, p10, p11)
+    n >= 0 || throw(ArgumentError("Sequence length n must be >= 0, got $n"))
+    l <= 0 && return 1.0
+    l > n && return 0.0
+    return clamp(1.0 - markov_bin_runs_prob(p00, p01, p10, p11, l, n; init_probs=init_probs), 0.0, 1.0)
+end
+
+
+# ---------------------------------------------------------------------------
+# Phase 1.2: Guibas-Odlyzko Autocorrelation Polynomials & Pattern BGFs
+# ---------------------------------------------------------------------------
+
+function _letter_prob(probs::AbstractDict, sym)
+    return probs[sym]
+end
+
+function _letter_prob(probs::AbstractVector, sym::Integer)
+    return probs[sym]
+end
+
+"""
+    autocorrelation_poly(pattern::AbstractVector, probs::Union{AbstractDict,AbstractVector}, z)
+
+Compute the weighted Guibas–Odlyzko autocorrelation (correlation) polynomial ``\\gamma_{\\mathfrak{p}}(z)``
+for an arbitrary pattern ``\\mathfrak{p} = p_1 \\dots p_k`` under letter weights `probs`
+(Flajolet & Sedgewick, Section I.4.1, p. 60 & Note III.39, p. 213):
+
+``\\gamma_{\\mathfrak{p}}(z) = \\sum_{j : p_1 \\dots p_{k-j} = p_{j+1} \\dots p_k} \\left(\\prod_{t=k-j+1}^k \\pi_{p_t}\\right) z^j``.
+"""
+function autocorrelation_poly(pattern::AbstractVector, probs::Union{AbstractDict,AbstractVector}, z)
+    k = length(pattern)
+    k >= 1 || throw(ArgumentError("Pattern must be non-empty"))
+    acc = one(z)
+    for j in 1:(k - 1)
+        if @view(pattern[1:(k - j)]) == @view(pattern[(j + 1):k])
+            w = prod(_letter_prob(probs, pattern[t]) for t in (k - j + 1):k)
+            acc = acc + w * (z^j)
+        end
+    end
+    return acc
+end
+
+
+"""
+    pattern_occurrences_bgf(pattern::AbstractVector, probs::Union{AbstractDict,AbstractVector}, z, u; overlapping::Bool=true)
+
+Bivariate Generating Function ``W_{\\mathfrak{p}}(z, u)`` for an arbitrary pattern ``\\mathfrak{p}``
+of length ``k`` in Bernoulli sequences of symbols with probabilities `probs`, where ``z`` marks
+sequence length and ``u`` marks the number of occurrences of ``\\mathfrak{p}``
+(Flajolet & Sedgewick, Note III.39, p. 213):
+
+- `overlapping=true` (default): counts possibly overlapping occurrences:
+  ``W(z, u) = \\frac{(u - 1) \\gamma(z) - u}{(1 - z)((u - 1)\\gamma(z) - u) + (u - 1)\\pi[\\mathfrak{p}] z^k}``
+- `overlapping=false`: counts greedy non-overlapping (renewal) occurrences:
+  ``W^{\\text{non-ov}}(z, u) = \\frac{\\gamma(z)}{(1 - z)\\gamma(z) + (1 - u)\\pi[\\mathfrak{p}] z^k}``
+"""
+function pattern_occurrences_bgf(pattern::AbstractVector, probs::Union{AbstractDict,AbstractVector}, z, u; overlapping::Bool=true)
+    k = length(pattern)
+    k >= 1 || throw(ArgumentError("Pattern must be non-empty"))
+    gamma = autocorrelation_poly(pattern, probs, z)
+    pi_p = prod(_letter_prob(probs, s) for s in pattern)
+    zk = z^k
+    if overlapping
+        num = (u - 1) * gamma - u
+        den = (1 - z) * num + (u - 1) * pi_p * zk
+        return num / den
+    else
+        return gamma / ((1 - z) * gamma + (1 - u) * pi_p * zk)
+    end
+end
+
+
+"""
+    pattern_occurrences_moments(pattern::AbstractVector, probs::Union{AbstractDict,AbstractVector}, n::Integer; overlapping::Bool=true)
+
+Exact analytical moments `(mean, var, std, count)` for the number of occurrences of arbitrary
+`pattern` in a random Bernoulli word of length `n` with letter probabilities `probs`.
+"""
+function pattern_occurrences_moments(pattern::AbstractVector, probs::Union{AbstractDict,AbstractVector}, n::Integer; overlapping::Bool=true)
+    n >= 0 || throw(ArgumentError("Sequence length n must be >= 0, got $n"))
+    if n < length(pattern)
+        return (mean = 0.0, var = 0.0, std = 0.0, count = 1.0)
+    end
+    return bgf_moments(
+        (z, u) -> pattern_occurrences_bgf(pattern, probs, z, u; overlapping=overlapping),
+        n
+    )
+end
+
+
+"""
+    pattern_waiting_prob(pattern::AbstractVector, probs::Union{AbstractDict,AbstractVector}, n::Integer) -> Float64
+
+Exact probability that `pattern` does **not** occur anywhere in a random Bernoulli sequence
+of length `n` (``[z^n] W_{\\mathfrak{p}}(z, 0)``).
+"""
+function pattern_waiting_prob(pattern::AbstractVector, probs::Union{AbstractDict,AbstractVector}, n::Integer)
+    n >= 0 || throw(ArgumentError("Sequence length n must be >= 0, got $n"))
+    n < length(pattern) && return 1.0
+    z_tay = TaylorSeries.Taylor1(Float64, Int(n))
+    gf = pattern_occurrences_bgf(pattern, probs, z_tay, 0.0; overlapping=true)
+    return clamp(Float64(TaylorSeries.getcoeff(gf, Int(n))), 0.0, 1.0)
+end
+
+
+"""
+    pattern_pval(pattern::AbstractVector, probs::Union{AbstractDict,AbstractVector}, k_obs::Integer, n::Integer; overlapping::Bool=true) -> Float64
+
+Exact combinatorial upper-tail ``p``-value ``P(X_n \\ge k_{\\text{obs}})`` for observing at least
+`k_obs` occurrences of `pattern` in a random Bernoulli sequence of length `n`, computed directly
+by extracting ``[z^n u^s] W_{\\mathfrak{p}}(z, u)`` for ``s = 0, \\dots, k_{\\text{obs}}-1``.
+"""
+function pattern_pval(pattern::AbstractVector, probs::Union{AbstractDict,AbstractVector}, k_obs::Integer, n::Integer; overlapping::Bool=true)
+    n >= 0 || throw(ArgumentError("Sequence length n must be >= 0, got $n"))
+    k_obs <= 0 && return 1.0
+    k = length(pattern)
+    max_occ = overlapping ? max(0, Int(n) - k + 1) : div(Int(n), k)
+    k_obs > max_occ && return 0.0
+    if k_obs == 1
+        return clamp(1.0 - pattern_waiting_prob(pattern, probs, n), 0.0, 1.0)
+    end
+    u_var = TaylorSeries.Taylor1(Float64, Int(k_obs - 1))
+    z_var = TaylorSeries.Taylor1([zero(u_var), one(u_var)], Int(n))
+    ser = pattern_occurrences_bgf(pattern, probs, z_var, u_var; overlapping=overlapping)
+    cn = TaylorSeries.getcoeff(ser, Int(n))
+    cdf_below = sum(Float64(TaylorSeries.getcoeff(cn, s)) for s in 0:(Int(k_obs) - 1))
+    return clamp(1.0 - cdf_below, 0.0, 1.0)
+end

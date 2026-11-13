@@ -4,6 +4,7 @@ authors = ["fargolo <felipe.c.argolo@protonmail.com> and contributors"]
 version = "2.0.4"
 
 [deps]
+LinearAlgebra = "37e2e46d-f89d-539d-b4ee-838fcccc9c8e"
 Reexport = "189a3867-3050-52da-a836-e630ba90ab69"
 SymPy = "24249f21-da20-56a4-8eb1-6a02cf4ae2e6"
 TaylorSeries = "6aa5eb33-94cf-58f4-a9d0-e4b2c4fc25ea"
@@ -11,8 +12,8 @@ TaylorSeries = "6aa5eb33-94cf-58f4-a9d0-e4b2c4fc25ea"
 [compat]
 Reexport = "1.2"
 SymPy = "1.2"
-julia = "1.9"
 TaylorSeries = "0.15"
+julia = "1.9"
 
 [extras]
 Test = "8dfed614-e22c-5e08-85e1-65c5234f0b40"

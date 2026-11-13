@@ -39,9 +39,18 @@ Pages   = ["misc.jl"]
 
 # Words and regular languages  
 
-Words counts, such as number of words with consecutive runs.    
+Words counts, patterns (via autocorrelation polynomials), and Markov binary runs generating functions.    
 
 ```@autodocs
 Modules = [AnalyticComb]
 Pages   = ["words_languages.jl"]
+```
+
+# Transfer matrices, graphs & dynamical systems
+
+Transfer-matrix BGF moments, directed/undirected graph walk generating functions, dynamical zeta polynomials, and random mapping attractor statistics.
+
+```@autodocs
+Modules = [AnalyticComb]
+Pages   = ["transfer_graphs.jl"]
 ```

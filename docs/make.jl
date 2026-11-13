@@ -18,6 +18,7 @@ makedocs(;
         "Introduction" => "index.md" ,
         "Installation" => "install.md",
         "Examples" => "examples.md",
+        "Markov, Patterns & Graphs Vignette" => "vignette_markov_graphs.md",
         "Function definitions" => "functions.md",
         
     ],

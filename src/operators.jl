@@ -121,3 +121,184 @@ function bgf_moments(bgf::SymPy.Sym, n::Integer; z=SymPy.symbols("z"), u=SymPy.s
     var_val = max(0.0, f2 + f1 - f1^2)
     return (mean = mean_val, var = var_val, std = sqrt(var_val), count = a_n)
 end
+
+
+# ---------------------------------------------------------------------------
+# Phase 1.4: Dominant Singularity Localization & Pole Proximity Metrics
+# ---------------------------------------------------------------------------
+
+"""
+    dominant_pole(denom_fn::Function; bracket=(0.0, 10.0), n_grid::Int=1000, tol::Real=1e-13) -> Float64
+
+Locate the smallest positive real root ``z_0 > 0`` of a meromorphic/rational generating
+function's denominator `denom_fn(z) == 0` via adaptive grid scanning followed by bisection
+(Flajolet & Sedgewick, Theorem IV.9 & Section IV.6).
+
+Returns `NaN` if no sign change is detected within `bracket`.
+"""
+function dominant_pole(denom_fn::Function; bracket=(0.0, 10.0), n_grid::Int=1000, tol::Real=1e-13)
+    lo = max(1e-9, Float64(bracket[1]))
+    hi = Float64(bracket[2])
+    hi > lo || throw(ArgumentError("Upper bracket must exceed lower bracket"))
+
+    grid = collect(range(lo, hi; length=n_grid))
+    if lo < 1.0 < hi
+        push!(grid, 1.0)
+        sort!(grid)
+    end
+
+    a = grid[1]
+    fa = Float64(denom_fn(a))
+    abs(fa) <= tol && return a
+
+    found = false
+    b = a
+    fb = fa
+    for k in 2:length(grid)
+        b = grid[k]
+        fb = Float64(denom_fn(b))
+        if abs(fb) <= tol
+            return b
+        end
+        if fa * fb < 0.0
+            found = true
+            break
+        end
+        a = b
+        fa = fb
+    end
+
+    # Expand upper bound exponentially if denominator is monotonically decaying without crossing yet
+    if !found
+        step_hi = hi
+        prev_x = b
+        prev_f = fb
+        for _ in 1:20
+            step_hi *= 2.0
+            f_next = Float64(denom_fn(step_hi))
+            if prev_f * f_next <= 0.0
+                a, b = prev_x, step_hi
+                fa, fb = prev_f, f_next
+                found = true
+                break
+            end
+            prev_x, prev_f = step_hi, f_next
+        end
+    end
+
+    found || return NaN
+
+    for _ in 1:100
+        mid = 0.5 * (a + b)
+        fmid = Float64(denom_fn(mid))
+        if abs(fmid) <= tol || (b - a) <= tol * max(1.0, abs(mid))
+            return mid
+        end
+        if fa * fmid <= 0.0
+            b = mid
+            fb = fmid
+        else
+            a = mid
+            fa = fmid
+        end
+    end
+    return 0.5 * (a + b)
+end
+
+
+"""
+    runs_dominant_pole(p::Real, q::Real, l::Integer)
+
+Compute the dominant real singularity ``z_0`` of the run-avoidance generating function
+(irredundant denominator ``1 - q z \\sum_{j=0}^{l-1} (p z)^j = 0``), where ``p + q = 1``
+and ``l \\ge 1``.
+
+For run-avoidance, ``P(\\text{no } l\\text{-run in } n) \\sim c \\cdot z_0^{-n}``: as ``p`` increases,
+``z_0 > 1`` grows and the avoidance survival rate ``1/z_0`` drops. Conversely, the coherent
+persistence pole ``z_{\\text{persist}} = 1/p`` of ``(1 - pz)^{-1}`` satisfies
+``z_{\\text{persist}} - 1 \\to 0^+`` as ``p \\to 1`` (Flajolet & Sedgewick, Section V.2–V.3).
+
+Returns `(z0 = ..., gap = z0 - 1.0, growth_rate = 1 / z0, persistence_pole = 1 / p, persistence_gap = 1 / p - 1.0)`.
+"""
+function runs_dominant_pole(p::Real, q::Real, l::Integer)
+    l >= 1 || throw(ArgumentError("Run threshold l must be >= 1, got $l"))
+    pf = Float64(p)
+    qf = Float64(q)
+    abs(pf + qf - 1.0) <= 1e-4 || throw(ArgumentError("p + q must equal 1"))
+
+    pers_pole = pf > 0 ? 1.0 / pf : Inf
+    if pf >= 1.0 - 1e-15
+        return (z0 = Inf, gap = Inf, growth_rate = 0.0, persistence_pole = 1.0, persistence_gap = 0.0)
+    elseif qf >= 1.0 - 1e-15
+        return (z0 = 1.0, gap = 0.0, growth_rate = 1.0, persistence_pole = Inf, persistence_gap = Inf)
+    end
+
+    denom_fn = function (z)
+        s = 0.0
+        pz = 1.0
+        for _ in 0:(l - 1)
+            s += pz
+            pz *= pf * z
+        end
+        return 1.0 - qf * z * s
+    end
+
+    z0 = dominant_pole(denom_fn; bracket=(1.0, 20.0))
+    return (
+        z0 = z0,
+        gap = z0 - 1.0,
+        growth_rate = 1.0 / z0,
+        persistence_pole = pers_pole,
+        persistence_gap = pers_pole - 1.0
+    )
+end
+
+
+"""
+    markov_dominant_pole(p00::Real, p01::Real, p10::Real, p11::Real, l::Integer)
+
+Compute the dominant real singularity ``z_0`` of the 1st-order Markov run-avoidance
+generating function (cleared denominator ``(1 - p_{00} z) - p_{01} p_{10} z \\sum_{k=1}^{l-1} p_{11}^{k-1} z^k = 0``),
+together with the coherent persistence pole ``z_{\\text{persist}} = 1 / p_{11}`` of ``(1 - p_{11} z)^{-1}``.
+
+As coherent persistence ``p_{11} \\to 1``, the run-avoidance decay rate ``1/z_0`` drops and
+``z_{\\text{persist}} - 1 \\to 0^+``.
+
+Returns `(z0 = ..., gap = z0 - 1.0, growth_rate = 1 / z0, persistence_pole = 1 / p11, persistence_gap = 1 / p11 - 1.0)`.
+"""
+function markov_dominant_pole(p00::Real, p01::Real, p10::Real, p11::Real, l::Integer)
+    l >= 1 || throw(ArgumentError("Run threshold l must be >= 1, got $l"))
+    p00f = Float64(p00); p01f = Float64(p01)
+    p10f = Float64(p10); p11f = Float64(p11)
+    pers_pole = p11f > 0 ? 1.0 / p11f : Inf
+
+    if l == 1
+        z0 = p00f > 0 ? 1.0 / p00f : Inf
+        return (z0 = z0, gap = z0 - 1.0, growth_rate = p00f, persistence_pole = pers_pole, persistence_gap = pers_pole - 1.0)
+    end
+    if p01f <= 1e-15 || p10f <= 1e-15
+        z0 = p00f > 0 ? 1.0 / p00f : Inf
+        return (z0 = z0, gap = z0 - 1.0, growth_rate = p00f, persistence_pole = pers_pole, persistence_gap = pers_pole - 1.0)
+    end
+
+    denom_fn = function (z)
+        s = 0.0
+        p11_pow = 1.0
+        z_pow = z
+        for _ in 1:(l - 1)
+            s += p11_pow * z_pow
+            p11_pow *= p11f
+            z_pow *= z
+        end
+        return (1.0 - p00f * z) - p01f * p10f * z * s
+    end
+
+    z0 = dominant_pole(denom_fn; bracket=(1.0, 20.0))
+    return (
+        z0 = z0,
+        gap = z0 - 1.0,
+        growth_rate = 1.0 / z0,
+        persistence_pole = pers_pole,
+        persistence_gap = pers_pole - 1.0
+    )
+end
